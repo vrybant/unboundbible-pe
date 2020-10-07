@@ -235,9 +235,7 @@ menubar.add_cascade(label="About",  menu=aboutmenu)
 
 win.config(menu=menubar) # Returning defined setting for widget
 
-#
 # Shortcut Icon Toolbar
-#
 
 shortcutbar = Frame(win,  height=25)
 
@@ -251,16 +249,21 @@ for i, icon in enumerate(icons):
 
 shortcutbar.pack(expand=NO, fill=X)
 
-#
+# List Box
+
+listbox = Listbox(win, height=4)
+for line in ['Choice 1','Choice 2','Choice 3','Choice 4']:
+    listbox.insert(END, line)
+listbox.pack(side=LEFT, fill=Y)
+
 # Text Widget & ScrollBar widget
-#
 
 memo = Text(win, wrap=WORD, undo=True)
 memo.pack(expand=YES, fill=BOTH)
 scroll=Scrollbar(memo)
 memo.configure(yscrollcommand=scroll.set)
 scroll.config(command=memo.yview)
-scroll.pack(side=RIGHT,fill=Y)
+scroll.pack(side=RIGHT, fill=Y)
 
 
 # Info Bar
@@ -268,7 +271,7 @@ scroll.pack(side=RIGHT,fill=Y)
 infobar = Label(memo, text='Line: 1 | Column: 0')
 infobar.pack(expand=NO, fill=None, side=RIGHT, anchor='se')
 
-# popup menu
+# Popup Menu
 
 cmenu = Menu(memo)
 for i in ('cut', 'copy', 'paste', 'undo', 'redo'):
@@ -278,9 +281,7 @@ cmenu.add_separator()
 cmenu.add_command(label='Select All', underline=7, command=select_all)
 memo.bind("<Button-3>", popup)
 
-#################################################
-
-# events
+# Events
 
 memo.bind('<Control-N>', new_file)
 memo.bind('<Control-n>', new_file)
