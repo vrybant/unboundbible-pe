@@ -4,9 +4,11 @@
 #
 
 import sqlite3
+from data import *
 
 class Module:
     database     = None
+    cursor       = None
     filePath     = ""
     fileName     = ""
     format       = "unbound"
@@ -33,27 +35,127 @@ class Module:
         self.filePath = atPath
         self.fileName = atPath#.lastPathComponent
         ext = "unbound" #filePath.pathExtension
-        if ext == "mybible" or ext == "bbli": format = "mysword"
+        if ext == "mybible" or ext == "bbli": self.format = "mysword"
         self.openDatabase()
-##      if !connected { return nil }
 
     def encodeID(id: int) -> int:
-        return unbound2mybible(id) if format == "mybible" else id
+#       return unbound2mybible(id) if self.format == "mybible" else id
+        return id
 
     def decodeID(id: int) -> int:
-        return mybible2unbound(id) if format == "mybible" else id
+#       return mybible2unbound(id) if self.format == "mybible" else id
+        return id
+
+    def dict_factory(cursor, row):
+        d = {}
+        for idx, col in enumerate(cursor.description):
+            d[col[0]] = row[idx]
+        return d
 
     def openDatabase(self):
-        self.filePath = "bibles/rstw.unbound"
-        self.database = sqlite3.connect(self.filePath)
-        cursor = self.database.cursor()
+        try:
+            self.database = sqlite3.connect(self.filePath)
+            self.database.row_factory = Module.dict_factory
+#           self.database.row_factory = sqlite3.Row
+            self.cursor = self.database.cursor()
+        except:
+            return
 
-        sql = "SELECT * FROM Bible WHERE book=1 AND chapter=1"
-        cursor.execute(sql)
-        print(cursor.fetchall()) # or use fetchone()
-        self.database.close
-##        if !database!.open() { return }
-##        if database!.tableExists("info") { format = .mybible }
+#       if database!.tableExists("info") { format = .mybible }
 
-atPath = "bibles/rstw.unbound"
-module = Module(atPath)
+        if self.format == "unbound" or self.format == "mysword":
+            query = "select * from Details"
+            try:
+                self.cursor.execute(query)
+                r = self.cursor.fetchone()
+                r = dict(r)
+
+                self.info      = r.get("Information", "")
+                self.info      = r.get("Description", self.info)
+                self.name      = r.get("Title",       self.info)
+                self.abbr      = r.get("Abbreviation","")
+                self.copyright = r.get("Copyright",   "")
+                self.language  = r.get("Language",    "")
+                self.strong    = r.get("Strong",      "")
+                self.embedded  = r.get("Embedded",    "")
+
+                self.connected = True
+                print(self.info)
+            except:
+                return []
+
+        if self.format == "mybible":
+            try:
+                query = "select * from info"
+                self.cursor.execute(query)
+                r = self.cursor.fetchall()
+                r = dict(r)
+
+                self.name      = r.get("description",   "")
+                self.info      = r.get("detailed_info", "")
+                self.language  = r.get("language",      "")
+
+                if r.get("is_strong"   ,"") == "true": self.strong    = True
+                if r.get("is_footnotes","") == "true": self.footnotes = True
+
+                self.connected = True
+                print(self.name)
+            except:
+                print("exception")
+                return []
+
+        if self.connected:
+            if self.name == "": self.name = self.fileName
+#           self.rightToLeft = getRightToLeft(self.language)
+#           info = info.removeTags
+
+class Bible(Module):
+
+    def __init__(self, atPath: str):
+        Module.__init__(self, atPath)
+
+##        if format == .mybible {
+##            z = mybibleAlias
+##            if !database!.tableExists(z.titles) { z.titles = "books" }
+##        }
+
+##        embtitles = database!.tableExists(z.titles)
+##        if connected && !database!.tableExists(z.bible) { return nil }
+
+    def getChapter(self, verse: Verse) -> [str]: ## verse: Verse
+#       id = Module.encodeID(verse.book)
+        id = verse.book
+##      let nt = isNewTestament(verse.book)
+##      let query = "select * from \(z.bible) where \(z.book) = \(id) and \(z.chapter) = \(verse.chapter)"
+        query = f"SELECT * FROM Bible WHERE book={id} AND chapter={verse.chapter}"
+
+        try:
+            self.cursor.execute(query)
+            r = self.cursor.fetchall()
+#           r = self.cursor.fetchone()
+#           r = dict(r)
+##          while results.next() {
+##              guard let line = results.string(forColumn: z.text) else { break }
+##              let text = preparation(line, format: format, nt: nt, purge: false)
+##              result.append(text)
+##          }
+            print(r)
+#           return dict(result)
+            return []
+        except:
+            print("exception")
+            return []
+
+path = "bibles/rstw.unbound"
+#path = "bibles/AMP.SQLite3"
+bible = Bible(path)
+
+verse = Verse()
+verse.book    = 40
+verse.chapter = 2
+verse.number  = 1
+verse.count   = 0
+
+out = bible.getChapter(verse)
+print(out)
+
