@@ -129,8 +129,7 @@ class Bible(Module):
 
     def getChapter(self, verse: Verse) -> [str]: ## verse: Verse
         id = Module.encodeID(self.format, verse.book)
-        print(f"id={id}")
-##      let nt = isNewTestament(verse.book)
+        nt = isNewTestament(verse.book)
 ##      let query = "select * from \(z.bible) where \(z.book) = \(id) and \(z.chapter) = \(verse.chapter)"
 #       query = f"SELECT * FROM Bible WHERE book={id} AND chapter={verse.chapter}"
         query = f"SELECT * FROM verses WHERE book_number={id} AND chapter={verse.chapter}"
