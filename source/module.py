@@ -46,22 +46,26 @@ class Module:
 #       return mybible2unbound(id) if self.format == "mybible" else id
         return id
 
-    def dict_factory(cursor, row):
+    def tableExists(cursor, tablename) -> bool:
+        query = f"PRAGMA table_info({tablename})" # case insensitive method
+        cursor.execute(query)
+        return cursor.fetchone() != None
+
+    def dict_factory(cursor, row) -> dict:
         d = {}
         for idx, col in enumerate(cursor.description):
-            d[col[0]] = row[idx]
+            d[col[0].capitalize()] = row[idx]
         return d
 
     def openDatabase(self):
         try:
             self.database = sqlite3.connect(self.filePath)
             self.database.row_factory = Module.dict_factory
-#           self.database.row_factory = sqlite3.Row
             self.cursor = self.database.cursor()
         except:
             return
 
-#       if database!.tableExists("info") { format = .mybible }
+        if Module.tableExists(self.cursor, "info"): format = "mybible"
 
         if self.format == "unbound" or self.format == "mysword":
             query = "select * from Details"
@@ -70,19 +74,19 @@ class Module:
                 r = self.cursor.fetchone()
                 r = dict(r)
 
-                self.info      = r.get("Information", "")
+                self.info      = r.get("Information",  "")
                 self.info      = r.get("Description", self.info)
                 self.name      = r.get("Title",       self.info)
-                self.abbr      = r.get("Abbreviation","")
-                self.copyright = r.get("Copyright",   "")
-                self.language  = r.get("Language",    "")
-                self.strong    = r.get("Strong",      "")
-                self.embedded  = r.get("Embedded",    "")
+                self.abbr      = r.get("Abbreviation", "")
+                self.copyright = r.get("Copyright",    "")
+                self.language  = r.get("Language",     "")
+                self.strong    = r.get("Strong",       "")
+                self.embedded  = r.get("Embedded",     "")
 
                 self.connected = True
                 print(self.info)
             except:
-                return []
+                print("exception")
 
         if self.format == "mybible":
             try:
@@ -91,21 +95,20 @@ class Module:
                 r = self.cursor.fetchall()
                 r = dict(r)
 
-                self.name      = r.get("description",   "")
-                self.info      = r.get("detailed_info", "")
-                self.language  = r.get("language",      "")
+                self.name     = r.get("Description",   "")
+                self.info     = r.get("Detailed_info", "")
+                self.language = r.get("Language",      "")
 
-                if r.get("is_strong"   ,"") == "true": self.strong    = True
-                if r.get("is_footnotes","") == "true": self.footnotes = True
+                if r.get("Is_strong"   , "") == "true": self.strong    = True
+                if r.get("Is_footnotes", "") == "true": self.footnotes = True
 
                 self.connected = True
                 print(self.name)
             except:
                 print("exception")
-                return []
 
         if self.connected:
-            if self.name == "": self.name = self.fileName
+            if not self.name: self.name = self.fileName
 #           self.rightToLeft = getRightToLeft(self.language)
 #           info = info.removeTags
 
@@ -114,17 +117,16 @@ class Bible(Module):
     def __init__(self, atPath: str):
         Module.__init__(self, atPath)
 
-##        if format == .mybible {
-##            z = mybibleAlias
-##            if !database!.tableExists(z.titles) { z.titles = "books" }
-##        }
+        if format == "mybible":
+#           z = mybibleAlias
+#           if !database!.tableExists(z.titles) { z.titles = "books" }
+            pass
 
-##        embtitles = database!.tableExists(z.titles)
-##        if connected && !database!.tableExists(z.bible) { return nil }
+#        embtitles = database!.tableExists(z.titles)
+#        if connected && !database!.tableExists(z.bible) { return nil }
 
     def getChapter(self, verse: Verse) -> [str]: ## verse: Verse
-#       id = Module.encodeID(verse.book)
-        id = verse.book
+        id = Module.encodeID(verse.book)
 ##      let nt = isNewTestament(verse.book)
 ##      let query = "select * from \(z.bible) where \(z.book) = \(id) and \(z.chapter) = \(verse.chapter)"
         query = f"SELECT * FROM Bible WHERE book={id} AND chapter={verse.chapter}"
@@ -132,16 +134,12 @@ class Bible(Module):
         try:
             self.cursor.execute(query)
             r = self.cursor.fetchall()
-#           r = self.cursor.fetchone()
-#           r = dict(r)
-##          while results.next() {
-##              guard let line = results.string(forColumn: z.text) else { break }
-##              let text = preparation(line, format: format, nt: nt, purge: false)
-##              result.append(text)
-##          }
-            print(r)
-#           return dict(result)
-            return []
+            result = []
+            for d in r:
+                text = d.get("Scripture", "")
+#               text = preparation(text, format: format, nt: nt, purge: false)
+                result.append(text)
+            return result
         except:
             print("exception")
             return []
