@@ -115,32 +115,33 @@ class Module:
 #           info = info.removeTags
 
 class Bible(Module):
+    z = unboundAlias()
 
     def __init__(self, atPath: str):
         Module.__init__(self, atPath)
 
-        if format == "mybible":
-#           z = mybibleAlias
+        print(self.z.bible)
+        if self.format == "mybible":
+            self.z = mybibleAlias()
+            print(self.z.bible)
 #           if !database!.tableExists(z.titles) { z.titles = "books" }
             pass
 
 #        embtitles = database!.tableExists(z.titles)
 #        if connected && !database!.tableExists(z.bible) { return nil }
 
-    def getChapter(self, verse: Verse) -> [str]: ## verse: Verse
+    def getChapter(self, verse: Verse) -> [str]:
         id = Module.encodeID(self.format, verse.book)
         nt = isNewTestament(verse.book)
-##      let query = "select * from \(z.bible) where \(z.book) = \(id) and \(z.chapter) = \(verse.chapter)"
-#       query = f"SELECT * FROM Bible WHERE book={id} AND chapter={verse.chapter}"
-        query = f"SELECT * FROM verses WHERE book_number={id} AND chapter={verse.chapter}"
+        z = self.z
+        query = f"SELECT * FROM {z.bible} WHERE {z.book}={id} AND {z.chapter}={verse.chapter}"
 
         try:
             self.cursor.execute(query)
             r = self.cursor.fetchall()
             result = []
             for d in r:
-#               text = d.get("Scripture", "")
-                text = d.get("Text", "")
+                text = d.get(z.text.capitalize(), "")
 #               text = preparation(text, format: format, nt: nt, purge: false)
                 result.append(text)
             return result
@@ -148,8 +149,8 @@ class Bible(Module):
             print("exception2")
             return []
 
-path = "bibles/rstw.unbound"
 path = "bibles/AMP.SQLite3"
+path = "bibles/rstw.unbound"
 bible = Bible(path)
 
 verse = Verse()

@@ -9,6 +9,28 @@ class Verse:
     number  = 0
     count   = 0
 
+class unboundAlias:
+    bible   = "Bible"
+    book    = "Book"
+    chapter = "Chapter"
+    verse   = "Verse"
+    text    = "Scripture"
+    titles  = "Titles"
+    number  = "Number"
+    name    = "Name"
+    abbr    = "Abbr"
+
+class mybibleAlias:
+    bible   = "verses"
+    book    = "book_number"
+    chapter = "chapter"
+    verse   = "verse"
+    text    = "text"
+    titles  = "books_all"
+    number  = "book_number"
+    name    = "long_name"
+    abbr    = "short_name"
+
 myBibleArray = [0, \
      10, 20, 30, 40, 50, 60, 70, 80, 90,100,110,120,130,140,150,160,190,220,230,240, \
     250,260,290,300,310,330,340,350,360,370,380,390,400,410,420,430,440,450,460,470, \
@@ -30,4 +52,5 @@ def mybible2unbound(id: int) -> int:
 
 def isNewTestament(n: int) -> bool:
      return n >= 40 and n < 77
+
 
