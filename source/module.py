@@ -38,11 +38,11 @@ class Module:
         if ext == "mybible" or ext == "bbli": self.format = "mysword"
         self.openDatabase()
 
-    def encodeID(self, id: int) -> int:
-        return unbound2mybible(id) if self.format == "mybible" else id
+    def encodeID(format: str, id: int) -> int:
+        return unbound2mybible(id) if format == "mybible" else id
 
-    def decodeID(self, id: int) -> int:
-        return mybible2unbound(id) if self.format == "mybible" else id
+    def decodeID(format: str, id: int) -> int:
+        return mybible2unbound(id) if format == "mybible" else id
 
     def tableExists(cursor, tablename) -> bool:
         query = f"PRAGMA table_info({tablename})" # case insensitive method
@@ -128,26 +128,29 @@ class Bible(Module):
 #        if connected && !database!.tableExists(z.bible) { return nil }
 
     def getChapter(self, verse: Verse) -> [str]: ## verse: Verse
-        id = Module.encodeID(self, verse.book)
+        id = Module.encodeID(self.format, verse.book)
+        print(f"id={id}")
 ##      let nt = isNewTestament(verse.book)
 ##      let query = "select * from \(z.bible) where \(z.book) = \(id) and \(z.chapter) = \(verse.chapter)"
-        query = f"SELECT * FROM Bible WHERE book={id} AND chapter={verse.chapter}"
+#       query = f"SELECT * FROM Bible WHERE book={id} AND chapter={verse.chapter}"
+        query = f"SELECT * FROM verses WHERE book_number={id} AND chapter={verse.chapter}"
 
         try:
             self.cursor.execute(query)
             r = self.cursor.fetchall()
             result = []
             for d in r:
-                text = d.get("Scripture", "")
+#               text = d.get("Scripture", "")
+                text = d.get("Text", "")
 #               text = preparation(text, format: format, nt: nt, purge: false)
                 result.append(text)
             return result
         except:
-            print("exception")
+            print("exception2")
             return []
 
-path = "bibles/AMP.SQLite3"
 path = "bibles/rstw.unbound"
+path = "bibles/AMP.SQLite3"
 bible = Bible(path)
 
 verse = Verse()
