@@ -38,13 +38,11 @@ class Module:
         if ext == "mybible" or ext == "bbli": self.format = "mysword"
         self.openDatabase()
 
-    def encodeID(id: int) -> int:
-#       return unbound2mybible(id) if self.format == "mybible" else id
-        return id
+    def encodeID(self, id: int) -> int:
+        return unbound2mybible(id) if self.format == "mybible" else id
 
-    def decodeID(id: int) -> int:
-#       return mybible2unbound(id) if self.format == "mybible" else id
-        return id
+    def decodeID(self, id: int) -> int:
+        return mybible2unbound(id) if self.format == "mybible" else id
 
     def tableExists(cursor, tablename) -> bool:
         query = f"PRAGMA table_info({tablename})" # case insensitive method
@@ -130,7 +128,7 @@ class Bible(Module):
 #        if connected && !database!.tableExists(z.bible) { return nil }
 
     def getChapter(self, verse: Verse) -> [str]: ## verse: Verse
-        id = Module.encodeID(verse.book)
+        id = Module.encodeID(self, verse.book)
 ##      let nt = isNewTestament(verse.book)
 ##      let query = "select * from \(z.bible) where \(z.book) = \(id) and \(z.chapter) = \(verse.chapter)"
         query = f"SELECT * FROM Bible WHERE book={id} AND chapter={verse.chapter}"
@@ -148,8 +146,8 @@ class Bible(Module):
             print("exception")
             return []
 
-path = "bibles/rstw.unbound"
 path = "bibles/AMP.SQLite3"
+path = "bibles/rstw.unbound"
 bible = Bible(path)
 
 verse = Verse()
