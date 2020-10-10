@@ -65,14 +65,13 @@ class Module:
         except:
             return
 
-        if Module.tableExists(self.cursor, "info"): format = "mybible"
+        if Module.tableExists(self.cursor, "info"): self.format = "mybible"
 
         if self.format == "unbound" or self.format == "mysword":
             query = "select * from Details"
             try:
                 self.cursor.execute(query)
                 r = self.cursor.fetchone()
-                r = dict(r)
 
                 self.info      = r.get("Information",  "")
                 self.info      = r.get("Description", self.info)
@@ -93,14 +92,19 @@ class Module:
                 query = "select * from info"
                 self.cursor.execute(query)
                 r = self.cursor.fetchall()
-                r = dict(r)
 
-                self.name     = r.get("Description",   "")
-                self.info     = r.get("Detailed_info", "")
-                self.language = r.get("Language",      "")
+                for i in r:
+                    name  = i.get("Name", "").lower()
+                    value = i.get("Value", "")
 
-                if r.get("Is_strong"   , "") == "true": self.strong    = True
-                if r.get("Is_footnotes", "") == "true": self.footnotes = True
+                    if name == "description"  : self.name = value
+                    if name == "detailed_info": self.info = value
+                    if name == "language"     : self.language = value
+
+                    if value.lower() == "true":
+                        if name == "strong_numbers": self.strong = True
+                        if name == "is_strong"     : self.strong = True
+                        if name == "is_footnotes"  : self.footnotes = True
 
                 self.connected = True
                 print(self.name)
@@ -145,7 +149,7 @@ class Bible(Module):
             return []
 
 path = "bibles/rstw.unbound"
-#path = "bibles/AMP.SQLite3"
+path = "bibles/AMP.SQLite3"
 bible = Bible(path)
 
 verse = Verse()
@@ -155,5 +159,6 @@ verse.number  = 1
 verse.count   = 0
 
 out = bible.getChapter(verse)
-print(out)
+print()
+for s in out: print(s)
 
