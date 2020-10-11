@@ -6,6 +6,58 @@
 import sqlite3
 from data import *
 
+def dict_factory(cursor, row) -> dict:
+    d = {}
+    for idx, col in enumerate(cursor.description):
+        d[col[0].capitalize()] = row[idx]
+    return d
+
+class ExternalTitles:
+    database = None
+
+    def __init__(self, language: str):
+#       path = getFileName(language)
+        path = "titles/ru.sqlite"
+        try:
+            self.database = sqlite3.connect(path)
+            self.database.row_factory = dict_factory
+            self.cursor = self.database.cursor()
+        except:
+            return
+
+    def getData() -> [Title()]:
+        data = [Title]()
+        k = 0
+        query = "SELECT * FROM Books"
+
+        try:
+            self.cursor.execute(query)
+            rows = self.cursor.fetchall()
+            result = []
+            for row in rows:
+                t = Title()
+                t.name = row.get("Name", "")
+                t.abbr = row.get("Abbreviation", "")
+                t.number = row.get("Number", 0)
+
+                if not t.abbr: t.abbr = t.name
+#               t.sorting = !isNewTestament(t.number) ? k : k + 100
+                data.append(t)
+                k += 1
+        except:
+            print("ExternalTitles getData() exception")
+
+        return data
+
+    def getFileName(language: str) -> str:
+#       url = resourceUrl.appendingPathComponent(titleDirectory)
+#       result = url.appendingPathComponent("en.sqlite").path
+#       if not language: return result
+#       list = contentsOfDirectory(url: url) {
+#           for item in list:
+#               if item.lastPathComponent.hasPrefix(language): result = item
+        return result
+
 class Module:
     database     = None
     cursor       = None
@@ -49,16 +101,10 @@ class Module:
         cursor.execute(query)
         return cursor.fetchone() != None
 
-    def dict_factory(cursor, row) -> dict:
-        d = {}
-        for idx, col in enumerate(cursor.description):
-            d[col[0].capitalize()] = row[idx]
-        return d
-
     def openDatabase(self):
         try:
             self.database = sqlite3.connect(self.filePath)
-            self.database.row_factory = Module.dict_factory
+            self.database.row_factory = dict_factory
             self.cursor = self.database.cursor()
         except:
             return
@@ -189,6 +235,6 @@ verse.number  = 1
 verse.count   = 0
 
 out = bible.loadDatabase()
-#out = bible.getChapter(verse)
+out = bible.getChapter(verse)
 print()
-#for s in out: print(s)
+for s in out: print(s)

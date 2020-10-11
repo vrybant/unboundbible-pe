@@ -15,6 +15,12 @@ class minVerse:
     number  = 1
     count   = 1
 
+class Title:
+    name    = ""
+    abbr    = ""
+    number  = 0
+    sorting = 0
+
 class Verse:
     book    = 0
     chapter = 0
