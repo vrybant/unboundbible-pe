@@ -19,7 +19,7 @@ class Module:
     info         = ""
     filetype     = ""
 
-#   firstVerse   = Verse()
+    firstVerse   = Verse()
     language     = "en"
     rightToLeft  = True
 
@@ -69,16 +69,16 @@ class Module:
             query = "select * from Details"
             try:
                 self.cursor.execute(query)
-                r = self.cursor.fetchone()
+                row = self.cursor.fetchone()
 
-                self.info      = r.get("Information",  "")
-                self.info      = r.get("Description", self.info)
-                self.name      = r.get("Title",       self.info)
-                self.abbr      = r.get("Abbreviation", "")
-                self.copyright = r.get("Copyright",    "")
-                self.language  = r.get("Language",     "")
-                self.strong    = r.get("Strong",       "")
-                self.embedded  = r.get("Embedded",     "")
+                self.info      = row.get("Information",  "")
+                self.info      = row.get("Description", self.info)
+                self.name      = row.get("Title",       self.info)
+                self.abbr      = row.get("Abbreviation", "")
+                self.copyright = row.get("Copyright",    "")
+                self.language  = row.get("Language",     "")
+                self.strong    = row.get("Strong",       "")
+                self.embedded  = row.get("Embedded",     "")
 
                 self.connected = True
                 print(self.info)
@@ -89,11 +89,11 @@ class Module:
             try:
                 query = "select * from info"
                 self.cursor.execute(query)
-                r = self.cursor.fetchall()
+                rows = self.cursor.fetchall()
 
-                for i in r:
-                    name  = i.get("Name", "").lower()
-                    value = i.get("Value", "")
+                for row in rows:
+                    name  = row.get("Name", "").lower()
+                    value = row.get("Value", "")
 
                     if name == "description"  : self.name = value
                     if name == "detailed_info": self.info = value
@@ -118,7 +118,7 @@ class Bible(Module):
     z = unboundAlias()
 
     def __init__(self, atPath: str):
-        Module.__init__(self, atPath)
+        super().__init__(atPath)
 
         print(self.z.bible)
         if self.format == "mybible":
@@ -130,6 +130,32 @@ class Bible(Module):
 #        embtitles = database!.tableExists(z.titles)
 #        if connected && !database!.tableExists(z.bible) { return nil }
 
+    def loadDatabase(self):
+        if self.loaded: return
+        query = f"SELECT DISTINCT {self.z.book} FROM {self.z.bible}"
+        print(query)
+
+        try:
+            self.cursor.execute(query)
+            rows = self.cursor.fetchall()
+
+            for row in rows:
+                value = row.get("Book", 0)
+                if type(value) is int:
+                    if value > 0:
+                        print(value)
+#                       appendBook(id)
+
+#           setTitles()
+#           titles = getTitles()
+#           firstVerse = Verse(book: minBook, chapter: 1, number: 1, count: 1)
+#           books.sort(by: {$0.sorting < $1.sorting} )
+
+            self.loaded = true
+        except:
+            print("loadDatabase exception")
+            return
+
     def getChapter(self, verse: Verse) -> [str]:
         id = Module.encodeID(self.format, verse.book)
         nt = isNewTestament(verse.book)
@@ -138,10 +164,10 @@ class Bible(Module):
 
         try:
             self.cursor.execute(query)
-            r = self.cursor.fetchall()
+            rows = self.cursor.fetchall()
             result = []
-            for d in r:
-                text = d.get(z.text.capitalize(), "")
+            for row in rows:
+                text = row.get(z.text.capitalize(), "")
 #               text = preparation(text, format: format, nt: nt, purge: false)
                 result.append(text)
             return result
@@ -159,7 +185,7 @@ verse.chapter = 2
 verse.number  = 1
 verse.count   = 0
 
-out = bible.getChapter(verse)
+out = bible.loadDatabase()
+#out = bible.getChapter(verse)
 print()
-for s in out: print(s)
-
+#for s in out: print(s)
