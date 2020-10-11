@@ -115,6 +115,8 @@ class Module:
 #           info = info.removeTags
 
 class Bible(Module):
+    books = [Book()]
+    titles = [str]
     z = unboundAlias()
 
     def __init__(self, atPath: str):
@@ -133,25 +135,26 @@ class Bible(Module):
     def loadDatabase(self):
         if self.loaded: return
         query = f"SELECT DISTINCT {self.z.book} FROM {self.z.bible}"
-        print(query)
 
         try:
             self.cursor.execute(query)
             rows = self.cursor.fetchall()
 
             for row in rows:
-                value = row.get("Book", 0)
-                if type(value) is int:
-                    if value > 0:
-                        print(value)
-#                       appendBook(id)
+                id = row.get(f"{self.z.book}".capitalize(), 0)
+                if type(id) is int:
+                    if id > 0:
+                        book = Book()
+                        book.number = Module.decodeID(self.format, id)
+                        book.id = id
+                        self.books.append(book)
 
 #           setTitles()
 #           titles = getTitles()
 #           firstVerse = Verse(book: minBook, chapter: 1, number: 1, count: 1)
 #           books.sort(by: {$0.sorting < $1.sorting} )
 
-            self.loaded = true
+            self.loaded = True
         except:
             print("loadDatabase exception")
             return
@@ -175,8 +178,8 @@ class Bible(Module):
             print("exception2")
             return []
 
-path = "bibles/AMP.SQLite3"
 path = "bibles/rstw.unbound"
+path = "bibles/AMP.SQLite3"
 bible = Bible(path)
 
 verse = Verse()

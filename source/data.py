@@ -21,6 +21,13 @@ class Verse:
     number  = 0
     count   = 0
 
+class Book:
+    title   = ""
+    abbr    = ""
+    number  = 0
+    id      = 0
+    sorting = 0
+
 class unboundAlias:
     bible   = "Bible"
     book    = "Book"
@@ -58,7 +65,7 @@ def unbound2mybible(id: int) -> int:
 
 def mybible2unbound(id: int) -> int:
     try:
-        r = myBibleArray.index(id)
+        return myBibleArray.index(id)
     except:
         return id
 
