@@ -3,6 +3,8 @@
 #  Unbound Bible Python Edition
 #
 
+import os
+import glob
 import sqlite3
 from data import *
 
@@ -108,7 +110,7 @@ class Bible(Module):
                     self._books.append(book)
 
         self.setTitles()
-        for b in self._books: print(b.number, b.title)
+#       for b in self._books: print(b.number, b.title)
 
 #       firstVerse = Verse(book: minBook, chapter: 1, number: 1, count: 1)
 #       books.sort(by: {$0.sorting < $1.sorting} )
@@ -146,12 +148,49 @@ class Bible(Module):
             result = []
             for row in rows:
                 text = row.get("Scripture", "")
-#               text = preparation(text, format: format, nt: nt, purge: false)
+#               text = preparation(text, nt, purge: false)
                 result.append(text)
             return result
         except:
             print("getChapter exception")
             return []
+
+
+class Shelf():
+
+    def __init__(self):
+        self.bibles = []
+        self.current = -1
+        self._load()
+#       bibles.sort(by: {$0.name < $1.name} )
+
+    def _load(self):
+        files = glob.glob("bibles/*.unbound")
+
+        for file in files:
+            print(file)
+            item = Bible(file)
+            self.bibles.append(item)
+
+    def setCurrent(index: int):
+        pass
+#       if index >= self.bibles.count { return }
+#       current = index
+#       bibles[current].loadDatabase()
+#       if !bibles[current].goodLink(activeVerse) {
+#           activeVerse = bibles[current].firstVerse
+
+    def setCurrent(fileName: str):
+        pass
+#       if bibles.isEmpty { return }
+#       for i in 0...bibles.count-1 {
+#           if bibles[i].fileName == fileName {
+#               setCurrent(i)
+#               return
+#       setCurrent(0)
+
+    def isEmpty(self) -> bool:
+        return False if self.bibles else True
 
 path = "bibles/rstw.unbound"
 bible = Bible(path)
@@ -162,7 +201,9 @@ verse.chapter = 2
 verse.number  = 1
 verse.count   = 0
 
-out = bible.loadDatabase()
-out = bible.getChapter(verse)
-print()
-for s in out: print(s)
+shelf = Shelf()
+
+#out = bible.loadDatabase()
+#out = bible.getChapter(verse)
+#print()
+#for s in out: print(s)
