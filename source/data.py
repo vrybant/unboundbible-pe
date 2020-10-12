@@ -21,23 +21,6 @@ class Verse:
     number  = 0
     count   = 0
 
-class Book:
-    title   = ""
-    abbr    = ""
-    number  = 0
-    sorting = 0
-
-class unboundAlias:
-    bible   = "Bible"
-    book    = "Book"
-    chapter = "Chapter"
-    verse   = "Verse"
-    text    = "Scripture"
-    titles  = "Titles"
-    number  = "Number"
-    name    = "Name"
-    abbr    = "Abbr"
-
 def isNewTestament(n: int) -> bool:
      return n >= 40 and n < 77
 

@@ -77,13 +77,16 @@ class Module:
         print(self.info)
 
 class Bible(Module):
-    _books = []
+
+    class _Book:
+        title   = ""
+        abbr    = ""
+        number  = 0
+        sorting = 0
 
     def __init__(self, atPath: str):
         super().__init__(atPath)
-
-#        embtitles = database!.tableExists(z.titles)
-#        if connected && !database!.tableExists(z.bible) { return nil }
+        self._books = []
 
     def loadDatabase(self):
         if self.loaded: return
@@ -100,7 +103,7 @@ class Bible(Module):
             value = row.get("Book", 0)
             if type(value) is int:
                 if value > 0:
-                    book = Book()
+                    book = self._Book()
                     book.number = value
                     self._books.append(book)
 
