@@ -9,54 +9,8 @@ from data import *
 def dict_factory(cursor, row) -> dict:
     d = {}
     for idx, col in enumerate(cursor.description):
-        d[col[0].capitalize()] = row[idx]
+        d[col[0]] = row[idx]
     return d
-
-class ExternalTitles:
-    database = None
-
-    def __init__(self, language: str):
-#       path = getFileName(language)
-        path = "titles/ru.sqlite"
-        try:
-            self.database = sqlite3.connect(path)
-            self.database.row_factory = dict_factory
-            self.cursor = self.database.cursor()
-        except:
-            return
-
-    def getData() -> [Title()]:
-        data = [Title]()
-        k = 0
-        query = "SELECT * FROM Books"
-
-        try:
-            self.cursor.execute(query)
-            rows = self.cursor.fetchall()
-            result = []
-            for row in rows:
-                t = Title()
-                t.name = row.get("Name", "")
-                t.abbr = row.get("Abbreviation", "")
-                t.number = row.get("Number", 0)
-
-                if not t.abbr: t.abbr = t.name
-#               t.sorting = !isNewTestament(t.number) ? k : k + 100
-                data.append(t)
-                k += 1
-        except:
-            print("ExternalTitles getData() exception")
-
-        return data
-
-    def getFileName(language: str) -> str:
-#       url = resourceUrl.appendingPathComponent(titleDirectory)
-#       result = url.appendingPathComponent("en.sqlite").path
-#       if not language: return result
-#       list = contentsOfDirectory(url: url) {
-#           for item in list:
-#               if item.lastPathComponent.hasPrefix(language): result = item
-        return result
 
 class Module:
     database     = None
@@ -98,31 +52,29 @@ class Module:
             self.database.row_factory = dict_factory
             self.cursor = self.database.cursor()
         except:
+            print("connect database exception")
             return
 
         query = "select * from Details"
         try:
             self.cursor.execute(query)
             row = self.cursor.fetchone()
-
-            self.info      = row.get("Information",  "")
-            self.info      = row.get("Description", self.info)
-            self.name      = row.get("Title",       self.info)
-            self.abbr      = row.get("Abbreviation", "")
-            self.copyright = row.get("Copyright",    "")
-            self.language  = row.get("Language",     "")
-            self.strong    = row.get("Strong",       "")
-            self.embedded  = row.get("Embedded",     "")
-
-            self.connected = True
-            print(self.info)
         except:
-            print("exception")
+            print("open database exception")
+            return
 
-        if self.connected:
-            if not self.name: self.name = self.fileName
-#           self.rightToLeft = getRightToLeft(self.language)
-#           info = info.removeTags
+        self.info      = row.get("Information",  "")
+        self.info      = row.get("Description", self.info)
+        self.name      = row.get("Title",       self.info)
+        self.abbr      = row.get("Abbreviation", "")
+        self.copyright = row.get("Copyright",    "")
+        self.language  = row.get("Language",     "")
+        self.strong    = row.get("Strong",       "")
+        self.embedded  = row.get("Embedded",     "")
+
+#       self.rightToLeft = getRightToLeft(self.language)
+        self.connected = True
+        print(self.info)
 
 class Bible(Module):
     books = [Book()]
@@ -159,6 +111,29 @@ class Bible(Module):
         except:
             print("loadDatabase exception")
             return
+
+        def getTitles() -> [Title()]:
+            query = "SELECT * FROM Titles"
+            try:
+                self.cursor.execute(query)
+                rows = self.cursor.fetchall()
+            except:
+                print("ExternalTitles getData() exception")
+                return []
+
+#           result = [Title]()
+            result = []
+            k = 0
+            for row in rows:
+                t = Title()
+                t.number = row.get("Number", 0)
+                t.name = row.get("Name", "")
+                t.abbr = row.get("Abbreviation", "")
+                if not isNewTestament(t.number): t.sorting = k + 100
+                result.append(t)
+                k += 1
+
+            return result
 
     def getChapter(self, verse: Verse) -> [str]:
         nt = isNewTestament(verse.book)
