@@ -77,7 +77,7 @@ class Module:
         print(self.info)
 
 class Bible(Module):
-    books = []
+    _books = []
 
     def __init__(self, atPath: str):
         super().__init__(atPath)
@@ -102,56 +102,36 @@ class Bible(Module):
                 if value > 0:
                     book = Book()
                     book.number = value
-                    self.books.append(book)
+                    self._books.append(book)
 
         self.setTitles()
+        for b in self._books: print(b.number, b.title)
 
-        for b in self.books: print(b.number, b.title)
-
-#       t = self.getTitles()
-#       for i in t: print(i.name)
-
-#       titles = getTitles()
 #       firstVerse = Verse(book: minBook, chapter: 1, number: 1, count: 1)
 #       books.sort(by: {$0.sorting < $1.sorting} )
 
         self.loaded = True
 
     def setTitles(self):
-        if not self.books: return
-        titles = self.getTitles()
-
-        for book in self.books:
-            book.title = "Unknown " + str(book.number)
-            book.sorting = 999
-
-            for title in titles:
-                if title.number == book.number:
-                    book.title = title.name
-                    book.abbr = title.abbr
-                    book.sorting = title.sorting
-
-    def getTitles(self) -> [Title]:
-        query = "SELECT * FROM Titles"
         try:
+            query = "SELECT * FROM Titles"
             self.cursor.execute(query)
-            rows = self.cursor.fetchall()
+            titles = self.cursor.fetchall()
         except:
-            print("getTitles exception")
-            return []
+            print("setTitles exception")
+            return
 
-        result = []
-        k = 0
-        for row in rows:
-            print(row)
-            t = Title()
-            t.number = row.get("Number", 0)
-            t.name = row.get("Name", "")
-            t.abbr = row.get("Abbreviation", "")
-            if not isNewTestament(t.number): t.sorting = k + 100
-            result.append(t)
-            k += 1
-        return result
+        for book in self._books:
+            unknown = "Unknown " + str(book.number)
+            k = 0
+            for row in titles:
+                number = row.get("Number", 0)
+                if number == book.number:
+                    book.title = row.get("Name", unknown)
+                    book.abbr = row.get("Abbreviation", "")
+                    book.sorting = k
+                    if not isNewTestament(book.number): book.sorting = k + 100
+                    k += 1
 
     def getChapter(self, verse: Verse) -> [str]:
         nt = isNewTestament(verse.book)
@@ -167,7 +147,7 @@ class Bible(Module):
                 result.append(text)
             return result
         except:
-            print("exception2")
+            print("getChapter exception")
             return []
 
 path = "bibles/rstw.unbound"
