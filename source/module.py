@@ -77,8 +77,7 @@ class Module:
         print(self.info)
 
 class Bible(Module):
-    books = [Book()]
-    titles = [str]
+    books = []
 
     def __init__(self, atPath: str):
         super().__init__(atPath)
@@ -93,47 +92,66 @@ class Bible(Module):
         try:
             self.cursor.execute(query)
             rows = self.cursor.fetchall()
-
-            for row in rows:
-                value = row.get("Book", 0)
-                if type(value) is int:
-                    if value > 0:
-                        book = Book()
-                        book.number = value
-                        self.books.append(book)
-
-#           setTitles()
-#           titles = getTitles()
-#           firstVerse = Verse(book: minBook, chapter: 1, number: 1, count: 1)
-#           books.sort(by: {$0.sorting < $1.sorting} )
-
-            self.loaded = True
         except:
             print("loadDatabase exception")
             return
 
-        def getTitles() -> [Title()]:
-            query = "SELECT * FROM Titles"
-            try:
-                self.cursor.execute(query)
-                rows = self.cursor.fetchall()
-            except:
-                print("ExternalTitles getData() exception")
-                return []
+        for row in rows:
+            value = row.get("Book", 0)
+            if type(value) is int:
+                if value > 0:
+                    book = Book()
+                    book.number = value
+                    self.books.append(book)
 
-#           result = [Title]()
-            result = []
-            k = 0
-            for row in rows:
-                t = Title()
-                t.number = row.get("Number", 0)
-                t.name = row.get("Name", "")
-                t.abbr = row.get("Abbreviation", "")
-                if not isNewTestament(t.number): t.sorting = k + 100
-                result.append(t)
-                k += 1
+        self.setTitles()
 
-            return result
+        for b in self.books: print(b.number, b.title)
+
+#       t = self.getTitles()
+#       for i in t: print(i.name)
+
+#       titles = getTitles()
+#       firstVerse = Verse(book: minBook, chapter: 1, number: 1, count: 1)
+#       books.sort(by: {$0.sorting < $1.sorting} )
+
+        self.loaded = True
+
+    def setTitles(self):
+        if not self.books: return
+        titles = self.getTitles()
+
+        for book in self.books:
+            book.title = "Unknown " + str(book.number)
+            book.sorting = 999
+
+            for title in titles:
+                if title.number == book.number:
+                    book.title = title.name
+                    book.abbr = title.abbr
+                    book.sorting = title.sorting
+
+    def getTitles(self) -> [Title]:
+        query = "SELECT * FROM Titles"
+        try:
+            self.cursor.execute(query)
+            rows = self.cursor.fetchall()
+        except:
+            print("getTitles exception")
+            return []
+
+        result = []
+        k = 0
+        for row in rows:
+            print(row)
+            t = Title()
+            t.number = row.get("Number", 0)
+            t.name = row.get("Name", "")
+            t.abbr = row.get("Abbreviation", "")
+            if not isNewTestament(t.number): t.sorting = k + 100
+            result.append(t)
+            k += 1
+        return result
 
     def getChapter(self, verse: Verse) -> [str]:
         nt = isNewTestament(verse.book)
