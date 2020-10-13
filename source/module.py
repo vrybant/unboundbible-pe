@@ -88,6 +88,7 @@ class Bible(Module):
     def __init__(self, atPath: str):
         super().__init__(atPath)
         self._books = []
+        self.loadDatabase() # temp
 
     def loadDatabase(self):
         if self.loaded: return
@@ -122,7 +123,7 @@ class Bible(Module):
             self.cursor.execute(query)
             titles = self.cursor.fetchall()
         except:
-            print("setTitles exception")
+#           print("setTitles exception")
             return
 
         for book in self._books:
@@ -136,6 +137,12 @@ class Bible(Module):
                     book.sorting = k
                     if not isNewTestament(book.number): book.sorting = k + 100
                     k += 1
+
+    def getTitles(self) -> [str]:
+        result = []
+        for book in self._books:
+            result.append(book.title)
+        return result
 
     def getChapter(self, verse: Verse) -> [str]:
         nt = isNewTestament(verse.book)

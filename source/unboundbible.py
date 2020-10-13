@@ -243,7 +243,7 @@ shortcutbar = Frame(win,  height=25)
 
 icons = ['new_file' ,'open_file', 'save', 'cut', 'copy', 'paste', 'undo', 'redo','on_find', 'about']
 for i, icon in enumerate(icons):
-    tbicon = PhotoImage(file='icons/'+icon+'.gif')
+    tbicon = PhotoImage(file=f'icons/{icon}.gif')
     cmd = eval(icon)
     toolbar = Button(shortcutbar, image=tbicon, command=cmd)
     toolbar.image = tbicon
@@ -258,6 +258,11 @@ for bible in module.shelf.bibles:
     listbox.insert(END, bible.name)
 listbox.pack(side=LEFT, fill=Y)
 
+listBox = Listbox(win, height=4)
+for title in module.shelf.bibles[1].getTitles():
+    listBox.insert(END, title)
+listBox.pack(side=LEFT, fill=Y)
+
 # Text Widget & ScrollBar widget
 
 memo = Text(win, wrap=WORD, undo=True)
@@ -266,7 +271,6 @@ scroll=Scrollbar(memo)
 memo.configure(yscrollcommand=scroll.set)
 scroll.config(command=memo.yview)
 scroll.pack(side=RIGHT, fill=Y)
-
 
 # Info Bar
 
