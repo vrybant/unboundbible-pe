@@ -6,6 +6,7 @@ Open Source Application
 """
 
 import os
+import module
 
 from tkinter import *
 from tkinter import filedialog
@@ -222,6 +223,7 @@ clrschms = {
 '6. Cobalt Blue':'ffffBB.3333aa',
 '7. Olive Green': 'D1E7E0.5B8340',
 }
+
 themechoice= StringVar()
 themechoice.set('1. Default White')
 for k in sorted(clrschms):
@@ -252,8 +254,8 @@ shortcutbar.pack(expand=NO, fill=X)
 # List Box
 
 listbox = Listbox(win, height=4)
-for line in ['Choice 1','Choice 2','Choice 3','Choice 4']:
-    listbox.insert(END, line)
+for bible in module.shelf.bibles:
+    listbox.insert(END, bible.name)
 listbox.pack(side=LEFT, fill=Y)
 
 # Text Widget & ScrollBar widget

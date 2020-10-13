@@ -72,11 +72,10 @@ class Module:
         self.copyright = row.get("Copyright",    "")
         self.language  = row.get("Language",     "")
         self.strong    = row.get("Strong",       "")
-        self.embedded  = row.get("Embedded",     "")
 
 #       self.rightToLeft = getRightToLeft(self.language)
         self.connected = True
-        print(self.info)
+#       print(self.info)
 
 class Bible(Module):
 
@@ -200,6 +199,7 @@ verse.book    = 40
 verse.chapter = 2
 verse.number  = 1
 verse.count   = 0
+
 
 shelf = Shelf()
 
