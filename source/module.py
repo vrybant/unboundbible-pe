@@ -92,7 +92,7 @@ class Bible(Module):
 
     def loadDatabase(self):
         if self.loaded: return
-        query = "SELECT DISTINCT Book FROM Bible"
+        query = "SELECT * FROM Titles"
 
         try:
             self.cursor.execute(query)
@@ -102,41 +102,17 @@ class Bible(Module):
             return
 
         for row in rows:
-            value = row.get("Book", 0)
-            if type(value) is int:
-                if value > 0:
-                    book = self._Book()
-                    book.number = value
-                    self._books.append(book)
+            number = row.get("Number", 0)
+            if number > 0:
+                book = self._Book()
+                book.number = number
+                book.title = row.get("Name", "")
+                book.abbr = row.get("Abbreviation", "")
+                self._books.append(book)
 
-        self.setTitles()
 #       for b in self._books: print(b.number, b.title)
-
 #       firstVerse = Verse(book: minBook, chapter: 1, number: 1, count: 1)
-#       books.sort(by: {$0.sorting < $1.sorting} )
-
         self.loaded = True
-
-    def setTitles(self):
-        try:
-            query = "SELECT * FROM Titles"
-            self.cursor.execute(query)
-            titles = self.cursor.fetchall()
-        except:
-#           print("setTitles exception")
-            return
-
-        for book in self._books:
-            unknown = "Unknown " + str(book.number)
-            k = 0
-            for row in titles:
-                number = row.get("Number", 0)
-                if number == book.number:
-                    book.title = row.get("Name", unknown)
-                    book.abbr = row.get("Abbreviation", "")
-                    book.sorting = k
-                    if not isNewTestament(book.number): book.sorting = k + 100
-                    k += 1
 
     def getTitles(self) -> [str]:
         result = []
@@ -160,7 +136,6 @@ class Bible(Module):
         except:
             print("getChapter exception")
             return []
-
 
 class Shelf():
 
@@ -197,9 +172,6 @@ class Shelf():
 
     def isEmpty(self) -> bool:
         return False if self.bibles else True
-
-path = "bibles/rstw.unbound"
-bible = Bible(path)
 
 verse = Verse()
 verse.book    = 40
