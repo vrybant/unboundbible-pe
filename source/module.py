@@ -92,7 +92,7 @@ class Bible(Module):
 
     def loadDatabase(self):
         if self.loaded: return
-        query = "SELECT * FROM Titles"
+        query = "SELECT * FROM Books"
 
         try:
             self.cursor.execute(query)
