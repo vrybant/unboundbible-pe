@@ -9,6 +9,8 @@ import os
 import module
 
 from tkinter import *
+from tkinter import ttk
+from tkinter.ttk import *
 from tkinter import filedialog
 from tkinter import messagebox
 
@@ -251,26 +253,40 @@ for i, icon in enumerate(icons):
 
 shortcutbar.pack(expand=NO, fill=X)
 
-# List Box
-
-listbox = Listbox(win, height=4)
-for bible in module.shelf.bibles:
-    listbox.insert(END, bible.name)
-listbox.pack(side=LEFT, fill=Y)
-
-listBox = Listbox(win, height=4)
-for title in module.shelf.bibles[1].getTitles():
-    listBox.insert(END, title)
-listBox.pack(side=LEFT, fill=Y)
-
 # Text Widget & ScrollBar widget
 
 memo = Text(win, wrap=WORD, undo=True)
-memo.pack(expand=YES, fill=BOTH)
+memo.pack(side=RIGHT, expand=YES, fill=BOTH)
+
 scroll=Scrollbar(memo)
 memo.configure(yscrollcommand=scroll.set)
 scroll.config(command=memo.yview)
 scroll.pack(side=RIGHT, fill=Y)
+
+# Combobox
+
+str_var = StringVar()
+combolist = []
+for bible in module.shelf.bibles:
+    combolist.append(bible.name)
+combobox = Combobox(win, textvariable = str_var, values=combolist)
+combobox.current(1)
+combobox.pack(side=TOP, fill=X)
+
+# ListBox
+
+listBox = Listbox(win, height=4)
+for title in module.shelf.bibles[3].getTitles():
+    listBox.insert(END, title)
+listBox.pack(side=LEFT, fill=BOTH)
+
+# ListBox
+
+listBox2 = Listbox(win, height=4)
+nums = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
+for n in nums:
+    listBox2.insert(END, str(n))
+listBox2.pack(side=LEFT, fill=BOTH)
 
 # Info Bar
 
