@@ -265,28 +265,53 @@ scroll.pack(side=RIGHT, fill=Y)
 
 # Combobox
 
-str_var = StringVar()
+def comboboxSelect(event=None):
+    if event: # this works only with bind because `command=` doesn't send event
+        print(event.widget.get())
+
 combolist = []
 for bible in shelf.bibles:
     combolist.append(bible.name)
-combobox = Combobox(win, textvariable = str_var, values=combolist)
+combobox = Combobox(win, textvariable = StringVar(), values=combolist)
 combobox.current(1)
+combobox.bind("<<ComboboxSelected>>", comboboxSelect)
 combobox.pack(side=TOP, fill=X)
 
 # ListBox
 
-listBox = Listbox(win, height=4)
-for title in shelf.bibles[3].getTitles():
-    listBox.insert(END, title)
-listBox.pack(side=LEFT, fill=BOTH)
+def bookBoxSelect(event=None):
+    if event:
+        curselection = bookBox.curselection()
+        if curselection:
+            selection = curselection[0]
+            print(selection)
+            book = titles[selection]
+            print(book)
+
+titles = shelf.bibles[3].getTitles()
+bookBox = Listbox(win, height=4)
+for title in titles:
+    bookBox.insert(END, title)
+bookBox.bind("<<ListboxSelect>>", bookBoxSelect)
+bookBox.pack(side=LEFT, fill=BOTH)
 
 # ListBox
 
-listBox2 = Listbox(win, height=4)
+def chapterBoxSelect(event=None):
+    if event:
+        curselection = chapterBox.curselection()
+        if curselection:
+            selection = curselection[0]
+            print(selection)
+            ch = nums[selection]
+            print(ch)
+
 nums = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
+chapterBox = Listbox(win, height=4)
 for n in nums:
-    listBox2.insert(END, str(n))
-listBox2.pack(side=LEFT, fill=BOTH)
+    chapterBox.insert(END, str(n))
+chapterBox.bind("<<ListboxSelect>>", chapterBoxSelect)
+chapterBox.pack(side=LEFT, fill=BOTH)
 
 # Info Bar
 
@@ -319,4 +344,29 @@ memo.bind('<KeyPress-F1>', help_box)
 
 memo.tag_configure("active_line", background="ivory2")
 
+"""
+  ActiveVerse.Chapter := ChapterBox.ItemIndex + 1;
+  ActiveVerse.Number := 1;
+  ActiveVerse.Count := 1;
+  LoadChapter;
+
+**************
+
+  ReadConfig;
+
+  Shelf.SetCurrent(DefaultCurrent);
+  ComboBoxInit;
+  MakeBookList;
+  if not Bible.GoodLink(ActiveVerse) then ActiveVerse := Bible.FirstVerse;
+  UpdateStatus(Bible.fileName + ' | ' + Bible.Info);
+
+  // LoadChapter; // we call it from FormActivate
+
+  MemoNotes.Lines.Clear;
+  MemoNotes.Font.Size := DefaultFont.Size;
+
+  if ChapterBox.Items.Count = 0 then // first time
+      GoToVerse(ActiveVerse,(ActiveVerse.number > 1));
+end;
+"""
 win.mainloop()
