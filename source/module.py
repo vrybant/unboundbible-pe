@@ -109,10 +109,10 @@ class Bible(Module):
                 book.title = row.get("Name", "")
                 book.abbr = row.get("Abbreviation", "")
                 self._books.append(book)
+                self.loaded = True
 
 #       for b in self._books: print(b.number, b.title)
 #       firstVerse = Verse(book: minBook, chapter: 1, number: 1, count: 1)
-        self.loaded = True
 
     def getTitles(self) -> [str]:
         result = []
