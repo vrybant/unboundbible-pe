@@ -6,13 +6,13 @@ Open Source Application
 """
 
 import os
-import bible
 
 from tkinter import *
 from tkinter import ttk
 from tkinter.ttk import *
 from tkinter import filedialog
 from tkinter import messagebox
+from bible import *
 
 win = Tk()
 win.title("Unbound Bible Python Edition")
@@ -267,7 +267,7 @@ scroll.pack(side=RIGHT, fill=Y)
 
 str_var = StringVar()
 combolist = []
-for bible in module.shelf.bibles:
+for bible in shelf.bibles:
     combolist.append(bible.name)
 combobox = Combobox(win, textvariable = str_var, values=combolist)
 combobox.current(1)
@@ -276,7 +276,7 @@ combobox.pack(side=TOP, fill=X)
 # ListBox
 
 listBox = Listbox(win, height=4)
-for title in module.shelf.bibles[3].getTitles():
+for title in shelf.bibles[3].getTitles():
     listBox.insert(END, title)
 listBox.pack(side=LEFT, fill=BOTH)
 
