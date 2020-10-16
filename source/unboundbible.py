@@ -6,7 +6,7 @@ Open Source Application
 """
 
 import os
-import module
+import bible
 
 from tkinter import *
 from tkinter import ttk
