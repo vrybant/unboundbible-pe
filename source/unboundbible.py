@@ -174,12 +174,12 @@ def paste(event=None):
 
 newicon   = PhotoImage(file='icons/new_file.gif')
 openicon  = PhotoImage(file='icons/open_file.gif')
-saveicon  = PhotoImage(file='icons/Save.gif')
-cuticon   = PhotoImage(file='icons/Cut.gif')
-copyicon  = PhotoImage(file='icons/Copy.gif')
-pasteicon = PhotoImage(file='icons/Paste.gif')
-undoicon  = PhotoImage(file='icons/Undo.gif')
-redoicon  = PhotoImage(file='icons/Redo.gif')
+saveicon  = PhotoImage(file='icons/save.gif')
+cuticon   = PhotoImage(file='icons/cut.gif')
+copyicon  = PhotoImage(file='icons/copy.gif')
+pasteicon = PhotoImage(file='icons/paste.gif')
+undoicon  = PhotoImage(file='icons/undo.gif')
+redoicon  = PhotoImage(file='icons/redo.gif')
 menubar   = Menu(win)
 
 filemenu = Menu(menubar, tearoff=0 )
