@@ -287,7 +287,7 @@ def bookBoxSelect(event=None):
             selection = curselection[0]
             sbook = titles[selection]
             book = shelf.bibles[3].bookByName(sbook)
-            if book > 0:
+            if book:
                 activeVerse.book = book;
                 activeVerse.chapter = 1;
                 activeVerse.number = 1;

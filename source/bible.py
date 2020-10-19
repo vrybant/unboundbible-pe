@@ -114,11 +114,10 @@ class Bible(Module):
 #       firstVerse = Verse(book: minBook, chapter: 1, number: 1, count: 1)
 
     def bookByName(self, name: str) -> int:
-        result = -1
         for book in self._books:
             if book.title == name:
-                result = book.number
-        return result
+                return book.number
+        return None
 
     def getTitles(self) -> [str]:
         result = []
