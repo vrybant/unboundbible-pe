@@ -143,10 +143,10 @@ class Bible(Module):
             return []
 
 class Shelf():
+    current = 0
 
     def __init__(self):
         self.bibles = []
-        self.current = -1
         self._load()
 #       bibles.sort(by: {$0.name < $1.name} )
 
@@ -158,25 +158,18 @@ class Shelf():
             item = Bible(file)
             self.bibles.append(item)
 
-    def setCurrent(index: int):
-        pass
-#       if index >= self.bibles.count { return }
-#       current = index
-#       bibles[current].loadDatabase()
-#       if !bibles[current].goodLink(activeVerse) {
+    def setCurrent(self, index: int):
+        if index >= self.bibles.count: return
+        self.current = index
+        self.bibles[self.current].loadDatabase()
+#       if !bibles[self.current].goodLink(activeVerse) {
 #           activeVerse = bibles[current].firstVerse
-
-    def setCurrent(fileName: str):
-        pass
-#       if bibles.isEmpty { return }
-#       for i in 0...bibles.count-1 {
-#           if bibles[i].fileName == fileName {
-#               setCurrent(i)
-#               return
-#       setCurrent(0)
 
     def isEmpty(self) -> bool:
         return False if self.bibles else True
+
+    def currBible(self) -> Bible:
+        return self.bibles[self.current]
 
 activeVerse = Verse()
 activeVerse.book    = 40
@@ -190,3 +183,7 @@ shelf = Shelf()
 #out = bible.getChapter(verse)
 #print()
 #for s in out: print(s)
+
+def currBible() -> Bible:
+    return shelf.bibles[shelf.current]
+

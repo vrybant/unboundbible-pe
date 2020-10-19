@@ -269,6 +269,14 @@ scroll.pack(side=RIGHT, fill=Y)
 def comboboxSelect(event=None):
     if event: # this works only with bind because `command=` doesn't send event
         print(event.widget.get())
+"""
+        Shelf.SetCurrent(ComboBox.ItemIndex);
+        makeBookList()
+        var select := ActiveVerse.number > 1
+        gotoVerse(activeVerse, select)
+        selectPage(apBible)
+        updateStatus(bible.fileName + ' | ' + bible.Info);
+"""
 
 combolist = []
 for bible in shelf.bibles:
@@ -286,7 +294,7 @@ def bookBoxSelect(event=None):
         if curselection:
             selection = curselection[0]
             sbook = titles[selection]
-            book = shelf.bibles[3].bookByName(sbook)
+            book = currBible().bookByName(sbook)
             if book:
                 activeVerse.book = book;
                 activeVerse.chapter = 1;
@@ -294,7 +302,8 @@ def bookBoxSelect(event=None):
                 activeVerse.count = 1;
                 loadChapter();
 
-titles = shelf.bibles[3].getTitles()
+titles = currBible().getTitles()
+#titles = shelf.bibles[shelf.current].getTitles()
 bookBox = Listbox(win, height=4)
 for title in titles:
     bookBox.insert(END, " " + title)
@@ -357,7 +366,7 @@ def applyTags(s: str) -> str:
     return s
 
 def getChapter() -> str:
-    strings = shelf.bibles[3].getChapter(activeVerse)
+    strings = currBible().getChapter(activeVerse)
     count = strings.count
     text = ""
     for i in range(len(strings)):
@@ -366,7 +375,7 @@ def getChapter() -> str:
     return text
 
 def memoLoadText(text: str, jtag: bool):
-    memo.delete(1.0,END)
+    memo.delete(1.0, END)
     memo.insert(1.0, text)
 
 def loadChapter():
