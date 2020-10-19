@@ -173,12 +173,11 @@ class Shelf():
     def isEmpty(self) -> bool:
         return False if self.bibles else True
 
-verse = Verse()
-verse.book    = 40
-verse.chapter = 2
-verse.number  = 1
-verse.count   = 0
-
+activeVerse = Verse()
+activeVerse.book    = 40
+activeVerse.chapter = 2
+activeVerse.number  = 1
+activeVerse.count   = 0
 
 shelf = Shelf()
 

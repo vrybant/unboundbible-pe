@@ -284,7 +284,6 @@ def bookBoxSelect(event=None):
         curselection = bookBox.curselection()
         if curselection:
             selection = curselection[0]
-            print(selection)
             book = titles[selection]
             print(book)
 
@@ -299,16 +298,16 @@ bookBox.pack(side=LEFT, fill=BOTH)
 
 def chapterBoxSelect(event=None):
     if event:
-        curselection = chapterBox.curselection()
-        if curselection:
-            selection = curselection[0]
-            print(selection)
-            ch = nums[selection]
-            print(ch)
+        selection = chapterBox.curselection()
+        if selection:
+            chapter = selection[0] + 1
+            activeVerse.chapter = chapter;
+            activeVerse.number = 1;
+            activeVerse.count = 1;
+            loadChapter();
 
-nums = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
 chapterBox = Listbox(win, height=4)
-for n in nums:
+for n in range(1, 15):
     chapterBox.insert(END, str(n))
 chapterBox.bind("<<ListboxSelect>>", chapterBoxSelect)
 chapterBox.pack(side=LEFT, fill=BOTH)
@@ -344,29 +343,24 @@ memo.bind('<KeyPress-F1>', help_box)
 
 memo.tag_configure("active_line", background="ivory2")
 
-"""
-  ActiveVerse.Chapter := ChapterBox.ItemIndex + 1;
-  ActiveVerse.Number := 1;
-  ActiveVerse.Count := 1;
-  LoadChapter;
+def getChapter() -> str:
+    strings = shelf.bibles[3].getChapter(activeVerse)
+    count = strings.count
+    text = ""
+    for i in range(len(strings)):
+        print(i)
+        text += str(i+1) + " " + strings[i] + "\n"
+    return text
 
-**************
+def memoLoadText(text: str, jtag: bool):
+    memo.delete(1.0,END)
+    memo.insert(1.0, text)
 
-  ReadConfig;
+def loadChapter():
+    memoLoadText(getChapter(), True)
+#   MakeChapterList;
+#   SelectPage(apBible);
 
-  Shelf.SetCurrent(DefaultCurrent);
-  ComboBoxInit;
-  MakeBookList;
-  if not Bible.GoodLink(ActiveVerse) then ActiveVerse := Bible.FirstVerse;
-  UpdateStatus(Bible.fileName + ' | ' + Bible.Info);
-
-  // LoadChapter; // we call it from FormActivate
-
-  MemoNotes.Lines.Clear;
-  MemoNotes.Font.Size := DefaultFont.Size;
-
-  if ChapterBox.Items.Count = 0 then // first time
-      GoToVerse(ActiveVerse,(ActiveVerse.number > 1));
-end;
-"""
 win.mainloop()
+
+
