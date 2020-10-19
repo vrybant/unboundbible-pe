@@ -111,8 +111,14 @@ class Bible(Module):
                 self._books.append(book)
                 self.loaded = True
 
-#       for b in self._books: print(b.number, b.title)
 #       firstVerse = Verse(book: minBook, chapter: 1, number: 1, count: 1)
+
+    def bookByName(self, name: str) -> int:
+        result = -1
+        for book in self._books:
+            if book.title == name:
+                result = book.number
+        return result
 
     def getTitles(self) -> [str]:
         result = []

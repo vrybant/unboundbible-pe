@@ -6,6 +6,7 @@ Open Source Application
 """
 
 import os
+import re
 
 from tkinter import *
 from tkinter import ttk
@@ -271,7 +272,7 @@ def comboboxSelect(event=None):
 
 combolist = []
 for bible in shelf.bibles:
-    combolist.append(bible.name)
+    combolist.append(" " + bible.name)
 combobox = Combobox(win, textvariable = StringVar(), values=combolist)
 combobox.current(1)
 combobox.bind("<<ComboboxSelected>>", comboboxSelect)
@@ -284,13 +285,19 @@ def bookBoxSelect(event=None):
         curselection = bookBox.curselection()
         if curselection:
             selection = curselection[0]
-            book = titles[selection]
-            print(book)
+            sbook = titles[selection]
+            book = shelf.bibles[3].bookByName(sbook)
+            if book > 0:
+                activeVerse.book = book;
+                activeVerse.chapter = 1;
+                activeVerse.number = 1;
+                activeVerse.count = 1;
+                loadChapter();
 
 titles = shelf.bibles[3].getTitles()
 bookBox = Listbox(win, height=4)
 for title in titles:
-    bookBox.insert(END, title)
+    bookBox.insert(END, " " + title)
 bookBox.bind("<<ListboxSelect>>", bookBoxSelect)
 bookBox.pack(side=LEFT, fill=BOTH)
 
@@ -304,11 +311,11 @@ def chapterBoxSelect(event=None):
             activeVerse.chapter = chapter;
             activeVerse.number = 1;
             activeVerse.count = 1;
-            loadChapter();
+            loadChapter()
 
 chapterBox = Listbox(win, height=4)
 for n in range(1, 15):
-    chapterBox.insert(END, str(n))
+    chapterBox.insert(END, " " + str(n))
 chapterBox.bind("<<ListboxSelect>>", chapterBoxSelect)
 chapterBox.pack(side=LEFT, fill=BOTH)
 
@@ -343,13 +350,19 @@ memo.bind('<KeyPress-F1>', help_box)
 
 memo.tag_configure("active_line", background="ivory2")
 
+def applyTags(s: str) -> str:
+    s = re.sub( '<i>','[', s)
+    s = re.sub('</i>',']', s)
+    s = re.sub(r'<.*?>','',s)
+    return s
+
 def getChapter() -> str:
     strings = shelf.bibles[3].getChapter(activeVerse)
     count = strings.count
     text = ""
     for i in range(len(strings)):
-        print(i)
-        text += str(i+1) + " " + strings[i] + "\n"
+        s = applyTags(strings[i])
+        text += str(i+1) + " " + s + "\n"
     return text
 
 def memoLoadText(text: str, jtag: bool):
