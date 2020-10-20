@@ -159,9 +159,11 @@ class Shelf():
             self.bibles.append(item)
 
     def setCurrent(self, index: int):
-        if index >= self.bibles.count: return
+        if index >= len(self.bibles): return
         self.current = index
+        print(self.current)
         self.bibles[self.current].loadDatabase()
+
 #       if not self.bibles[self.current].goodLink(activeVerse):
 #           activeVerse = bibles[current].firstVerse
 
@@ -175,7 +177,9 @@ currVerse.number  = 1
 currVerse.count   = 0
 
 shelf = Shelf()
-currBible = shelf.bibles[shelf.current]
+
+def currBible():
+    return shelf.bibles[shelf.current]
 
 #out = bible.loadDatabase()
 #out = bible.getChapter(verse)
