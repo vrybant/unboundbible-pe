@@ -290,11 +290,17 @@ combobox.pack(side=TOP, fill=X)
 
 # ListBox
 
+def makeBookList():
+    bookBox.delete(0,END)
+    for title in currBible().getTitles():
+        bookBox.insert(END, " " + title)
+
 def bookBoxSelect(event=None):
     if event:
         curselection = bookBox.curselection()
         if curselection:
             selection = curselection[0]
+            titles = currBible().getTitles()
             sbook = titles[selection]
             book = currBible().bookByName(sbook)
             if book:
@@ -304,13 +310,10 @@ def bookBoxSelect(event=None):
                 currVerse.count = 1;
                 loadChapter();
 
-titles = currBible().getTitles()
-#titles = shelf.bibles[shelf.current].getTitles()
 bookBox = Listbox(win, height=4)
-for title in titles:
-    bookBox.insert(END, " " + title)
 bookBox.bind("<<ListboxSelect>>", bookBoxSelect)
 bookBox.pack(side=LEFT, fill=BOTH)
+makeBookList()
 
 # ListBox
 
@@ -365,6 +368,7 @@ def makeChapterList():
     pass
 
 def applyTags(s: str) -> str:
+    s = re.sub( '<S>',' ', s)
     s = re.sub( '<i>','[', s)
     s = re.sub('</i>',']', s)
     s = re.sub(r'<.*?>','',s)
@@ -386,6 +390,5 @@ def memoLoadText(text: str, jtag: bool):
 def loadChapter():
     memoLoadText(getChapter(), True)
     makeChapterList()
-#   SelectPage(apBible);
 
 win.mainloop()

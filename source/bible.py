@@ -180,9 +180,3 @@ shelf = Shelf()
 
 def currBible():
     return shelf.bibles[shelf.current]
-
-#out = bible.loadDatabase()
-#out = bible.getChapter(verse)
-#print()
-#for s in out: print(s)
-
