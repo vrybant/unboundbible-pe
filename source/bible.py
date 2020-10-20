@@ -168,11 +168,11 @@ class Shelf():
     def isEmpty(self) -> bool:
         return False if self.bibles else True
 
-activeVerse = Verse()
-activeVerse.book    = 40
-activeVerse.chapter = 2
-activeVerse.number  = 1
-activeVerse.count   = 0
+currVerse = Verse()
+currVerse.book    = 40
+currVerse.chapter = 2
+currVerse.number  = 1
+currVerse.count   = 0
 
 shelf = Shelf()
 currBible = shelf.bibles[shelf.current]
@@ -181,7 +181,4 @@ currBible = shelf.bibles[shelf.current]
 #out = bible.getChapter(verse)
 #print()
 #for s in out: print(s)
-
-##def currBible() -> Bible:
-##    return shelf.bibles[shelf.current]
 

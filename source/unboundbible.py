@@ -273,7 +273,7 @@ def comboboxSelect(event=None):
         Shelf.SetCurrent(ComboBox.ItemIndex);
         makeBookList()
         var select := ActiveVerse.number > 1
-        gotoVerse(activeVerse, select)
+        gotoVerse(currVerse, select)
         selectPage(apBible)
         updateStatus(bible.fileName + ' | ' + bible.Info);
 """
@@ -296,10 +296,10 @@ def bookBoxSelect(event=None):
             sbook = titles[selection]
             book = currBible.bookByName(sbook)
             if book:
-                activeVerse.book = book;
-                activeVerse.chapter = 1;
-                activeVerse.number = 1;
-                activeVerse.count = 1;
+                currVerse.book = book;
+                currVerse.chapter = 1;
+                currVerse.number = 1;
+                currVerse.count = 1;
                 loadChapter();
 
 titles = currBible.getTitles()
@@ -317,9 +317,9 @@ def chapterBoxSelect(event=None):
         selection = chapterBox.curselection()
         if selection:
             chapter = selection[0] + 1
-            activeVerse.chapter = chapter;
-            activeVerse.number = 1;
-            activeVerse.count = 1;
+            currVerse.chapter = chapter;
+            currVerse.number = 1;
+            currVerse.count = 1;
             loadChapter()
 
 chapterBox = Listbox(win, height=4)
@@ -366,7 +366,7 @@ def applyTags(s: str) -> str:
     return s
 
 def getChapter() -> str:
-    strings = currBible.getChapter(activeVerse)
+    strings = currBible.getChapter(currVerse)
     count = strings.count
     text = ""
     for i in range(len(strings)):
@@ -384,5 +384,3 @@ def loadChapter():
 #   SelectPage(apBible);
 
 win.mainloop()
-
-
