@@ -320,8 +320,7 @@ makeBookList()
 def makeChapterList():
     chapterBox.delete(0,END)
     max = currBible().chaptersCount(currVerse)
-    print(max)
-    for n in range(1, max):
+    for n in range(1, max + 1):
         chapterBox.insert(END, " " + str(n))
 #   if ChapterBox.Items.Count = n then Exit;
 
