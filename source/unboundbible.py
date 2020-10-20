@@ -317,6 +317,14 @@ makeBookList()
 
 # ListBox
 
+def makeChapterList():
+    chapterBox.delete(0,END)
+    max = currBible().chaptersCount(currVerse)
+    print(max)
+    for n in range(1, max):
+        chapterBox.insert(END, " " + str(n))
+#   if ChapterBox.Items.Count = n then Exit;
+
 def chapterBoxSelect(event=None):
     if event:
         selection = chapterBox.curselection()
@@ -328,10 +336,9 @@ def chapterBoxSelect(event=None):
             loadChapter()
 
 chapterBox = Listbox(win, height=4)
-for n in range(1, 15):
-    chapterBox.insert(END, " " + str(n))
 chapterBox.bind("<<ListboxSelect>>", chapterBoxSelect)
 chapterBox.pack(side=LEFT, fill=BOTH)
+makeChapterList()
 
 # Info Bar
 
@@ -363,9 +370,6 @@ memo.bind('<Control-F>', on_find)
 memo.bind('<KeyPress-F1>', help_box)
 
 memo.tag_configure("active_line", background="ivory2")
-
-def makeChapterList():
-    pass
 
 def applyTags(s: str) -> str:
     s = re.sub( '<S>',' ', s)

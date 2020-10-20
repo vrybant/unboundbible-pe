@@ -125,6 +125,18 @@ class Bible(Module):
             result.append(book.title)
         return result
 
+    def chaptersCount(self, verse: Verse) -> int:
+        query = f"SELECT MAX(Chapter) AS Count FROM Bible WHERE Book = {verse.number}";
+
+        try:
+            self.cursor.execute(query)
+            row = self.cursor.fetchone()
+            count = row.get("Count", 0)
+            return count
+        except:
+            print("chaptersCount exception")
+            return 0
+
     def getChapter(self, verse: Verse) -> [str]:
         nt = isNewTestament(verse.book)
         query = f"SELECT * FROM Bible WHERE Book={verse.book} AND Chapter={verse.chapter}"
