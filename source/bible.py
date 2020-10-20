@@ -143,7 +143,7 @@ class Bible(Module):
             return []
 
 class Shelf():
-    current = 0
+    current = 3
 
     def __init__(self):
         self.bibles = []
@@ -162,14 +162,11 @@ class Shelf():
         if index >= self.bibles.count: return
         self.current = index
         self.bibles[self.current].loadDatabase()
-#       if !bibles[self.current].goodLink(activeVerse) {
+#       if not self.bibles[self.current].goodLink(activeVerse):
 #           activeVerse = bibles[current].firstVerse
 
     def isEmpty(self) -> bool:
         return False if self.bibles else True
-
-    def currBible(self) -> Bible:
-        return self.bibles[self.current]
 
 activeVerse = Verse()
 activeVerse.book    = 40
@@ -178,12 +175,13 @@ activeVerse.number  = 1
 activeVerse.count   = 0
 
 shelf = Shelf()
+currBible = shelf.bibles[shelf.current]
 
 #out = bible.loadDatabase()
 #out = bible.getChapter(verse)
 #print()
 #for s in out: print(s)
 
-def currBible() -> Bible:
-    return shelf.bibles[shelf.current]
+##def currBible() -> Bible:
+##    return shelf.bibles[shelf.current]
 

@@ -244,7 +244,7 @@ win.config(menu=menubar) # Returning defined setting for widget
 
 shortcutbar = Frame(win,  height=25)
 
-icons = ['new_file' ,'open_file', 'save', 'cut', 'copy', 'paste', 'undo', 'redo','on_find', 'about']
+icons = ['new_file' ,'open_file', 'save', 'copy', 'paste', 'undo', 'redo','on_find', 'about']
 for i, icon in enumerate(icons):
     tbicon = PhotoImage(file=f'icons/{icon}.gif')
     cmd = eval(icon)
@@ -294,7 +294,7 @@ def bookBoxSelect(event=None):
         if curselection:
             selection = curselection[0]
             sbook = titles[selection]
-            book = currBible().bookByName(sbook)
+            book = currBible.bookByName(sbook)
             if book:
                 activeVerse.book = book;
                 activeVerse.chapter = 1;
@@ -302,7 +302,7 @@ def bookBoxSelect(event=None):
                 activeVerse.count = 1;
                 loadChapter();
 
-titles = currBible().getTitles()
+titles = currBible.getTitles()
 #titles = shelf.bibles[shelf.current].getTitles()
 bookBox = Listbox(win, height=4)
 for title in titles:
@@ -366,12 +366,12 @@ def applyTags(s: str) -> str:
     return s
 
 def getChapter() -> str:
-    strings = currBible().getChapter(activeVerse)
+    strings = currBible.getChapter(activeVerse)
     count = strings.count
     text = ""
     for i in range(len(strings)):
         s = applyTags(strings[i])
-        text += str(i+1) + " " + s + "\n"
+        text += f" {i+1} {s}\n"
     return text
 
 def memoLoadText(text: str, jtag: bool):
