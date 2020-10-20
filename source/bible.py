@@ -26,7 +26,6 @@ class Module:
     info         = ""
     filetype     = ""
 
-    firstVerse   = Verse()
     language     = "en"
     rightToLeft  = True
 
@@ -111,7 +110,10 @@ class Bible(Module):
                 self._books.append(book)
                 self.loaded = True
 
-#       firstVerse = Verse(book: minBook, chapter: 1, number: 1, count: 1)
+    def firstVerse(self) -> Verse:
+        v = minVerse()
+        v.book = self._books[0].number
+        return v
 
     def bookByName(self, name: str) -> int:
         for book in self._books:
@@ -180,8 +182,8 @@ class Shelf():
         return False if self.bibles else True
 
 currVerse = Verse()
-currVerse.book    = 40
-currVerse.chapter = 2
+currVerse.book    = 1
+currVerse.chapter = 1
 currVerse.number  = 1
 currVerse.count   = 0
 

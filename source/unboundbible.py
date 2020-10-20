@@ -394,4 +394,9 @@ def loadChapter():
     memoLoadText(getChapter(), True)
     makeChapterList()
 
+# init
+#if not currBible.goodLink(currVerse): currVerse = currBible.firstVerse
+currVerse = currBible().firstVerse()
+
+loadChapter()
 win.mainloop()
