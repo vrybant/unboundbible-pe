@@ -6,7 +6,6 @@
 import os
 import glob
 import sqlite3
-from data import *
 
 def dict_factory(cursor, row) -> dict:
     d = {}
@@ -144,7 +143,7 @@ class Bible(Module):
             return 0
 
     def getChapter(self, verse: Verse) -> [str]:
-        nt = isNewTestament(verse.book)
+        nt = self.isNewTestament(verse.book)
         query = f"SELECT * FROM Bible WHERE Book={verse.book} AND Chapter={verse.chapter}"
         try:
             self.cursor.execute(query)
@@ -159,6 +158,9 @@ class Bible(Module):
             print("getChapter exception")
             return []
 
+    def isNewTestament(self, n: int) -> bool:
+        return n >= 40 and n < 77
+
 class Shelf():
     current = 3
 
@@ -171,7 +173,6 @@ class Shelf():
         files = glob.glob("bibles/*.unbound")
 
         for file in files:
-            print(file)
             item = Bible(file)
             self.bibles.append(item)
 
