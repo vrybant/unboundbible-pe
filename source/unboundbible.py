@@ -268,16 +268,10 @@ scroll.pack(side=RIGHT, fill=Y)
 
 def comboboxSelect(event=None):
     if event: # this works only with bind because `command=` doesn't send event
-        print(event.widget.get())
         index = combobox.current()
         shelf.setCurrent(index)
         makeBookList()
-"""
-        var select := currVerse.number > 1
-        gotoVerse(currVerse, select)
-        selectPage(apBible)
-        updateStatus(bible.fileName + ' | ' + bible.Info);
-"""
+        goToVerse(currVerse)
 
 combolist = []
 for bible in shelf.bibles:
@@ -366,6 +360,11 @@ memo.bind('<Control-F>', on_find)
 memo.bind('<KeyPress-F1>', help_box)
 
 memo.tag_configure("active_line", background="ivory2")
+
+def goToVerse(verse: Verse):
+    if not currBible().goodLink(verse): return
+    currVerse = verse
+    loadChapter()
 
 def applyTags(s: str) -> str:
     s = re.sub( '<S>',' ', s)

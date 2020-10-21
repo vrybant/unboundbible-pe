@@ -164,6 +164,10 @@ class Bible(Module):
             print("getChapter exception")
             return []
 
+    def goodLink(self, verse: Verse) -> bool:
+#       result = length(self.getRange(verse)) > 0;
+        return True
+
     def isNewTestament(self, n: int) -> bool:
         return n >= 40 and n < 77
 
@@ -185,7 +189,6 @@ class Shelf():
     def setCurrent(self, index: int):
         if index >= len(self.bibles): return
         self.current = index
-        print(self.current)
         self.bibles[self.current].loadDatabase()
 
 #       if not self.bibles[self.current].goodLink(activeVerse):
