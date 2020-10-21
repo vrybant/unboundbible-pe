@@ -18,7 +18,7 @@ from bible import *
 win = Tk()
 win.title("Unbound Bible Python Edition")
 win.geometry('640x480')
-win.iconbitmap('icons/unboundbible.ico')
+if os.name == 'nt': win.iconbitmap('icons/unboundbible.ico')
 
 def popup(event):
     cmenu.tk_popup(event.x_win, event.y_win, 0)
