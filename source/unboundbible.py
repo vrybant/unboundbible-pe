@@ -303,7 +303,7 @@ def bookBoxSelect(event=None):
             sbook = titles[selection]
             book = currBible().bookByName(sbook)
             if book:
-                currVerse = Verse()
+                currVerse.reset()
                 currVerse.book = book
                 loadChapter()
 
@@ -376,7 +376,6 @@ def applyTags(s: str) -> str:
 
 def getChapter() -> str:
     strings = currBible().getChapter(currVerse)
-    count = strings.count
     text = ""
     for i in range(len(strings)):
         s = applyTags(strings[i])

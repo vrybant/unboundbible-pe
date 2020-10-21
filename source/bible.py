@@ -19,6 +19,12 @@ class Verse:
     number  = 1
     count   = 1
 
+    def reset(self):
+        self.book    = 1
+        self.chapter = 1
+        self.number  = 1
+        self.count   = 1
+
 class Module:
     database     = None
     cursor       = None
@@ -143,7 +149,6 @@ class Bible(Module):
             return 0
 
     def getChapter(self, verse: Verse) -> [str]:
-        nt = self.isNewTestament(verse.book)
         query = f"SELECT * FROM Bible WHERE Book={verse.book} AND Chapter={verse.chapter}"
         try:
             self.cursor.execute(query)
@@ -151,6 +156,7 @@ class Bible(Module):
             result = []
             for row in rows:
                 text = row.get("Scripture", "")
+#               nt = self.isNewTestament(verse.book)
 #               text = preparation(text, nt, purge: false)
                 result.append(text)
             return result
