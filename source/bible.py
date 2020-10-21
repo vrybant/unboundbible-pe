@@ -14,6 +14,12 @@ def dict_factory(cursor, row) -> dict:
         d[col[0]] = row[idx]
     return d
 
+class Verse:
+    book    = 1
+    chapter = 1
+    number  = 1
+    count   = 1
+
 class Module:
     database     = None
     cursor       = None
@@ -111,7 +117,7 @@ class Bible(Module):
                 self.loaded = True
 
     def firstVerse(self) -> Verse:
-        v = minVerse()
+        v = Verse()
         v.book = self._books[0].number
         return v
 
@@ -182,11 +188,6 @@ class Shelf():
         return False if self.bibles else True
 
 currVerse = Verse()
-currVerse.book    = 1
-currVerse.chapter = 1
-currVerse.number  = 1
-currVerse.count   = 0
-
 shelf = Shelf()
 
 def currBible():

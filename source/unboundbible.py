@@ -270,7 +270,6 @@ def comboboxSelect(event=None):
     if event: # this works only with bind because `command=` doesn't send event
         print(event.widget.get())
         index = combobox.current()
-        print(index)
         shelf.setCurrent(index)
         makeBookList()
 """
@@ -284,7 +283,7 @@ combolist = []
 for bible in shelf.bibles:
     combolist.append(" " + bible.name)
 combobox = Combobox(win, textvariable = StringVar(), values=combolist)
-combobox.current(1)
+combobox.current(3)
 combobox.bind("<<ComboboxSelected>>", comboboxSelect)
 combobox.pack(side=TOP, fill=X)
 
@@ -304,11 +303,9 @@ def bookBoxSelect(event=None):
             sbook = titles[selection]
             book = currBible().bookByName(sbook)
             if book:
-                currVerse.book = book;
-                currVerse.chapter = 1;
-                currVerse.number = 1;
-                currVerse.count = 1;
-                loadChapter();
+                currVerse = Verse()
+                currVerse.book = book
+                loadChapter()
 
 bookBox = Listbox(win, height=4)
 bookBox.bind("<<ListboxSelect>>", bookBoxSelect)
