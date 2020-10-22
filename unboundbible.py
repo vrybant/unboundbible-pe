@@ -390,7 +390,7 @@ def loadChapter():
     makeChapterList()
 
 # init
-#if not currBible.goodLink(currVerse): currVerse = currBible.firstVerse
+
 currVerse = currBible().firstVerse()
 
 loadChapter()

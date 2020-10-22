@@ -164,7 +164,6 @@ class Bible(Module):
             print("getChapter exception")
             return []
 
-
     def getRange(self, verse: Verse) -> [str]:
         query = f"SELECT * FROM Bible WHERE Book={verse.book} AND Chapter={verse.chapter} " + \
                 f"AND Verse={verse.number} AND Verse<{verse.number + verse.count}"
@@ -183,8 +182,7 @@ class Bible(Module):
             return []
 
     def goodLink(self, verse: Verse) -> bool:
-#       result = length(self.getRange(verse)) > 0;
-        return True
+        return len(self.getRange(verse)) > 0
 
     def isNewTestament(self, n: int) -> bool:
         return n >= 40 and n < 77
@@ -207,16 +205,16 @@ class Shelf():
     def setCurrent(self, index: int):
         if index >= len(self.bibles): return
         self.current = index
-        self.bibles[self.current].loadDatabase()
+        self.bibles[index].loadDatabase()
 
-#       if not self.bibles[self.current].goodLink(activeVerse):
-#           activeVerse = bibles[current].firstVerse
+        if not self.bibles[index].goodLink(currVerse):
+            currVerse = bibles[index].firstVerse()
 
     def isEmpty(self) -> bool:
         return False if self.bibles else True
 
-currVerse = Verse()
 shelf = Shelf()
+currVerse = Verse()
 
 def currBible():
     return shelf.bibles[shelf.current]
