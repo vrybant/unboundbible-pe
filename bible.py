@@ -164,6 +164,24 @@ class Bible(Module):
             print("getChapter exception")
             return []
 
+
+    def getRange(self, verse: Verse) -> [str]:
+        query = f"SELECT * FROM Bible WHERE Book={verse.book} AND Chapter={verse.chapter} " + \
+                f"AND Verse={verse.number} AND Verse<{verse.number + verse.count}"
+        try:
+            self.cursor.execute(query)
+            rows = self.cursor.fetchall()
+            result = []
+            for row in rows:
+                text = row.get("Scripture", "")
+#               nt = self.isNewTestament(verse.book)
+#               text = preparation(text, nt, purge: false)
+                result.append(text)
+            return result
+        except:
+            print("getRange exception")
+            return []
+
     def goodLink(self, verse: Verse) -> bool:
 #       result = length(self.getRange(verse)) > 0;
         return True
