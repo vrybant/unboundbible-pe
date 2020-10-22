@@ -7,12 +7,6 @@ import os
 import glob
 import sqlite3
 
-def dict_factory(cursor, row) -> dict:
-    d = {}
-    for idx, col in enumerate(cursor.description):
-        d[col[0]] = row[idx]
-    return d
-
 class Verse:
     book    = 1
     chapter = 1
@@ -53,6 +47,12 @@ class Module:
         self.fileName = atPath#.lastPathComponent
         self.openDatabase()
 
+    def dict_factory(self, cursor, row) -> dict:
+        d = {}
+        for idx, col in enumerate(cursor.description):
+            d[col[0]] = row[idx]
+        return d
+
     def tableExists(cursor, tablename) -> bool:
         query = f"PRAGMA table_info({tablename})" # case insensitive method
         cursor.execute(query)
@@ -61,7 +61,7 @@ class Module:
     def openDatabase(self):
         try:
             self.database = sqlite3.connect(self.filePath)
-            self.database.row_factory = dict_factory
+            self.database.row_factory = self.dict_factory
             self.cursor = self.database.cursor()
         except:
             print("connect database exception")
@@ -207,14 +207,15 @@ class Shelf():
         self.current = index
         self.bibles[index].loadDatabase()
 
+        global currVerse
         if not self.bibles[index].goodLink(currVerse):
             currVerse = bibles[index].firstVerse()
 
     def isEmpty(self) -> bool:
         return False if self.bibles else True
 
-shelf = Shelf()
 currVerse = Verse()
+shelf = Shelf()
 
 def currBible():
     return shelf.bibles[shelf.current]

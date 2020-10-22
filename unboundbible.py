@@ -392,6 +392,6 @@ def loadChapter():
 # init
 
 currVerse = currBible().firstVerse()
-
 loadChapter()
+
 win.mainloop()
