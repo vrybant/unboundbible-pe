@@ -42,9 +42,9 @@ class Module:
     interlinear  = False
     embtitles    = False
 
-    def __init__(self, atPath: str):
-        self.filePath = atPath
-        self.fileName = atPath#.lastPathComponent
+    def __init__(self, path: str):
+        self.filePath = path
+        self.fileName = os.path.basename(path)
         self.openDatabase()
 
     def dict_factory(self, cursor, row) -> dict:
@@ -188,7 +188,7 @@ class Bible(Module):
         return n >= 40 and n < 77
 
 class Shelf():
-    current = 3
+    current = 0
 
     def __init__(self):
         self.bibles = []
@@ -210,6 +210,13 @@ class Shelf():
         global currVerse
         if not self.bibles[index].goodLink(currVerse):
             currVerse = bibles[index].firstVerse()
+
+    def setCurrentByName(self, fileName: str):
+        index = 0
+        for i in range(len(self.bibles)):
+            if self.bibles[i].fileName == fileName:
+                index = i
+        self.setCurrent(index)
 
     def isEmpty(self) -> bool:
         return False if self.bibles else True
