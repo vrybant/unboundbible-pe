@@ -16,36 +16,11 @@ from tkinter import filedialog
 from tkinter import messagebox
 from bible import *
 
-# Config
-
-def saveConfig():
-    config = configparser.ConfigParser()
-    config.read("config.ini", "utf8")
-
-    if "Application" not in config.sections():
-        config.add_section("Application")
-
-    config.set('Application','FileName', currBible().fileName)
-
-    f = open('config.ini', 'w', encoding='utf8')
-    config.write(f)
-    f.close()
-
-def readConfig():
-    config = configparser.ConfigParser()
-    config.read("config.ini", "utf8")
-
-    try:
-        fileName = config.get('Application','FileName')
-        shelf.setCurrentByName(fileName)
-    except:
-        pass
-
-readConfig()
+# Window
 
 win = Tk()
+win.withdraw()
 win.title("Unbound Bible Python Edition")
-win.geometry('640x480')
 if os.name == 'nt': win.iconbitmap('icons/unboundbible.ico')
 
 def popup(event):
@@ -219,7 +194,6 @@ for bible in shelf.bibles:
     combolist.append(" " + bible.name)
 combobox = Combobox(win, textvariable = StringVar(), values=combolist)
 combobox.bind("<<ComboboxSelected>>", comboboxSelect)
-combobox.current(shelf.current)
 combobox.pack(side=TOP, fill=X)
 
 # BookBox
@@ -244,7 +218,6 @@ def bookBoxSelect(event=None):
 
 bookBox = Listbox(win, height=4)
 bookBox.bind("<<ListboxSelect>>", bookBoxSelect)
-makeBookList()
 bookBox.pack(side=LEFT, fill=BOTH)
 
 # ChapterBox
@@ -268,7 +241,6 @@ def chapterBoxSelect(event=None):
 
 chapterBox = Listbox(win, height=4)
 chapterBox.bind("<<ListboxSelect>>", chapterBoxSelect)
-makeChapterList()
 chapterBox.pack(side=LEFT, fill=BOTH)
 
 # Popup Menu
@@ -314,8 +286,40 @@ def loadChapter():
     memoLoad(getChapter())
     makeChapterList()
 
+# Config
+
+def saveConfig():
+    config = configparser.ConfigParser()
+    config.read("config.ini", "utf8")
+
+    if "Application" not in config.sections():
+        config.add_section("Application")
+
+    config.set('Application','FileName', currBible().fileName)
+
+    f = open('config.ini', 'w', encoding='utf8')
+    config.write(f)
+    f.close()
+
+def readConfig():
+    config = configparser.ConfigParser()
+    config.read("config.ini", "utf8")
+
+    try:
+        fileName = config.get('Application','FileName')
+        shelf.setCurrentByName(fileName)
+    except:
+        pass
+
+# Init
+
+readConfig()
+combobox.current(shelf.current)
+makeBookList()
 loadChapter()
 
+win.geometry('640x480')
+win.deiconify()
 win.mainloop()
 
 saveConfig()
