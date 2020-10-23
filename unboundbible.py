@@ -45,7 +45,7 @@ def about(event=None):
     messagebox.showinfo("About","Unbound Bible Python Edition \n\n Open Source Application")
 
 def help_box(event=None):
-	pass
+    pass
 
 def exit_editor(event=None):
 #   if messagebox.askokcancel("Quit", "Do you really want to quit?"):
@@ -54,49 +54,6 @@ def exit_editor(event=None):
 win.protocol('WM_DELETE_WINDOW', exit_editor) # override close button and redirect to exit_editor
 
 #######################################################################
-
-def new_file(event=None):
-    win.title("Untitled")
-    global filename
-    filename = None
-    memo.delete(1.0,END)
-    update_line_number()
-
-def open_file(event=None):
-    global filename
-    filename = filedialog.askopenfilename(defaultextension=".txt",filetypes=[("All Files","*.*"),("Text Documents","*.txt")])
-    if filename == "": # If no file chosen.
-        filename = None # Absence of file.
-    else:
-        win.title(os.path.basename(filename))
-        memo.delete(1.0,END)
-        fh = open(filename,"r")
-        memo.insert(1.0,fh.read())
-        fh.close()
-    update_line_number()
-
-def save(event=None):
-        global filename
-        try:
-            f = open(filename, 'w')
-            letter = memo.get(1.0, 'end')
-            f.write(letter)
-            f.close()
-        except:
-            save_as(event=None)
-
-def save_as(event=None):
-    try:
-        f = filedialog.asksaveasfilename(initialfile='Untitled.txt',defaultextension=".txt",filetypes=[("All Files","*.*"),("Text Documents","*.txt")])
-        fh = open(f, 'w')
-        textoutput = memo.get(0.0, END)
-        fh.write(textoutput)
-        fh.close()
-        win.title(os.path.basename(f))
-    except:
-        pass
-
-#########################################################################
 
 def select_all(event=None):
         memo.tag_add('sel', '1.0', 'end')
@@ -136,61 +93,22 @@ def search_for(needle,cssnstv, memo, t2,e) :
         e.focus_set()
         t2.title('%d matches found' %count)
 
-########################################################################
-
-def undo(event=None):
-    memo.event_generate("<<Undo>>")
-    update_line_number()
-
-
-def redo(event=None):
-    memo.event_generate("<<Redo>>")
-    update_line_number()
-
-
-def cut(event=None):
-    memo.event_generate("<<Cut>>")
-    update_line_number()
-
 def copy(event=None):
     memo.event_generate("<<Copy>>")
-    update_line_number()
-
-def paste(event=None):
-    memo.event_generate("<<Paste>>")
-    update_line_number()
 
 ######################################################################
 
-newicon   = PhotoImage(file='icons/new_file.gif')
-openicon  = PhotoImage(file='icons/open_file.gif')
-saveicon  = PhotoImage(file='icons/save.gif')
-cuticon   = PhotoImage(file='icons/cut.gif')
 copyicon  = PhotoImage(file='icons/copy.gif')
-pasteicon = PhotoImage(file='icons/paste.gif')
-undoicon  = PhotoImage(file='icons/undo.gif')
-redoicon  = PhotoImage(file='icons/redo.gif')
 menubar   = Menu(win)
 
 filemenu = Menu(menubar, tearoff=0 )
-filemenu.add_command(label="New", accelerator='Ctrl+N', compound=LEFT, image=newicon, underline=0, command=new_file  )
-filemenu.add_command(label="Open", accelerator='Ctrl+O', compound=LEFT, image=openicon, underline =0, command=open_file)
-filemenu.add_command(label="Save", accelerator='Ctrl+S',compound=LEFT, image=saveicon,underline=0, command=save)
-filemenu.add_command(label="Save as",accelerator='Shift+Ctrl+S', command=save_as)
+filemenu.add_command(label="Find",underline= 0, accelerator='Ctrl+F', command=on_find)
 filemenu.add_separator()
 filemenu.add_command(label="Exit", accelerator='Alt+F4', command=exit_editor)
-menubar.add_cascade(label="File", menu=filemenu)
+menubar.add_cascade(label="Tools", menu=filemenu)
 
 editmenu = Menu(menubar, tearoff=0)
-editmenu.add_command(label="Undo",compound=LEFT,  image=undoicon, accelerator='Ctrl+Z', command=undo)
-editmenu.add_command(label="Redo",compound=LEFT,  image=redoicon, accelerator='Ctrl+Y', command=redo)
-editmenu.add_separator()
-editmenu.add_command(label="Cut", compound=LEFT, image=cuticon, accelerator='Ctrl+X', command=cut)
 editmenu.add_command(label="Copy", compound=LEFT, image=copyicon,  accelerator='Ctrl+C', command=copy)
-editmenu.add_command(label="Paste",compound=LEFT, image=pasteicon, accelerator='Ctrl+V', command = paste)
-editmenu.add_separator()
-editmenu.add_command(label="Find",underline= 0, accelerator='Ctrl+F', command=on_find)
-editmenu.add_separator()
 editmenu.add_command(label="Select All", underline=7, accelerator='Ctrl+A', command=select_all)
 menubar.add_cascade(label="Edit", menu=editmenu)
 
@@ -228,7 +146,7 @@ win.config(menu=menubar) # Returning defined setting for widget
 
 shortcutbar = Frame(win,  height=25)
 
-icons = ['new_file' ,'open_file', 'save', 'copy', 'paste', 'undo', 'redo','on_find', 'about']
+icons = ['copy', 'on_find', 'about']
 for i, icon in enumerate(icons):
     tbicon = PhotoImage(file=f'icons/{icon}.gif')
     cmd = eval(icon)
@@ -325,21 +243,14 @@ makeChapterList()
 # Popup Menu
 
 cmenu = Menu(memo)
-for i in ('cut', 'copy', 'paste', 'undo', 'redo'):
-    cmd = eval(i)
-    cmenu.add_command(label=i, compound=LEFT, command=cmd)
+cmd = eval('copy')
+cmenu.add_command(label=i, compound=LEFT, command=cmd)
 cmenu.add_separator()
 cmenu.add_command(label='Select All', underline=7, command=select_all)
 memo.bind("<Button-3>", popup)
 
 # Events
 
-memo.bind('<Control-N>', new_file)
-memo.bind('<Control-n>', new_file)
-memo.bind('<Control-O>', open_file)
-memo.bind('<Control-o>', open_file)
-memo.bind('<Control-S>', save)
-memo.bind('<Control-s>', save)
 memo.bind('<Control-A>', select_all)
 memo.bind('<Control-a>', select_all)
 memo.bind('<Control-f>', on_find)
@@ -376,8 +287,19 @@ def loadChapter():
     memoLoadText(getChapter(), True)
     makeChapterList()
 
+# Config
+
+def saveConfig():
+    pass
+
+def readConfig():
+    config = configparser.ConfigParser()
+    config.read("config.ini", "utf8")
+    print(config["Application"]["FileName"])
+
 # Init
 
+readConfig()
 currVerse = currBible().firstVerse()
 loadChapter()
 
