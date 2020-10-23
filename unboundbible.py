@@ -16,6 +16,33 @@ from tkinter import filedialog
 from tkinter import messagebox
 from bible import *
 
+# Config
+
+def saveConfig():
+    config = configparser.ConfigParser()
+    config.read("config.ini", "utf8")
+
+    if "Application" not in config.sections():
+        config.add_section("Application")
+
+    config.set('Application','FileName', currBible().fileName)
+
+    f = open('config.ini', 'w', encoding='utf8')
+    config.write(f)
+    f.close()
+
+def readConfig():
+    config = configparser.ConfigParser()
+    config.read("config.ini", "utf8")
+
+    try:
+        fileName = config.get('Application','FileName')
+        shelf.setCurrentByName(fileName)
+    except:
+        pass
+
+readConfig()
+
 win = Tk()
 win.title("Unbound Bible Python Edition")
 win.geometry('640x480')
@@ -166,6 +193,10 @@ status.pack(expand=NO, fill=X, side=BOTTOM, anchor='se')
 
 # Text Widget & ScrollBar widget
 
+def memoLoad(text: str):
+    memo.delete(1.0, END)
+    memo.insert(1.0, text)
+
 memo = Text(win, wrap=WORD, undo=True)
 memo.pack(side=RIGHT, expand=YES, fill=BOTH)
 
@@ -188,6 +219,7 @@ for bible in shelf.bibles:
     combolist.append(" " + bible.name)
 combobox = Combobox(win, textvariable = StringVar(), values=combolist)
 combobox.bind("<<ComboboxSelected>>", comboboxSelect)
+combobox.current(shelf.current)
 combobox.pack(side=TOP, fill=X)
 
 # BookBox
@@ -212,6 +244,7 @@ def bookBoxSelect(event=None):
 
 bookBox = Listbox(win, height=4)
 bookBox.bind("<<ListboxSelect>>", bookBoxSelect)
+makeBookList()
 bookBox.pack(side=LEFT, fill=BOTH)
 
 # ChapterBox
@@ -235,6 +268,7 @@ def chapterBoxSelect(event=None):
 
 chapterBox = Listbox(win, height=4)
 chapterBox.bind("<<ListboxSelect>>", chapterBoxSelect)
+makeChapterList()
 chapterBox.pack(side=LEFT, fill=BOTH)
 
 # Popup Menu
@@ -276,46 +310,12 @@ def getChapter() -> str:
         text += f" {i+1} {s}\n"
     return text
 
-def memoLoadText(text: str, jtag: bool):
-    memo.delete(1.0, END)
-    memo.insert(1.0, text)
-
 def loadChapter():
-    memoLoadText(getChapter(), True)
+    memoLoad(getChapter())
     makeChapterList()
 
-# Config
-
-def saveConfig():
-    config = configparser.ConfigParser()
-    config.read("config.ini", "utf8")
-
-    if "Application" not in config.sections():
-        config.add_section("Application")
-
-    config.set('Application','FileName', currBible().fileName)
-
-    f = open('config.ini', 'w', encoding='utf8')
-    config.write(f)
-    f.close()
-
-def readConfig():
-    config = configparser.ConfigParser()
-    config.read("config.ini", "utf8")
-
-    try:
-        fileName = config.get('Application','FileName')
-        shelf.setCurrentByName(fileName)
-    except:
-        pass
-
-# Init
-
-readConfig()
-combobox.current(shelf.current)
-makeBookList()
-makeChapterList()
 loadChapter()
 
 win.mainloop()
+
 saveConfig()
