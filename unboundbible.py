@@ -187,11 +187,10 @@ combolist = []
 for bible in shelf.bibles:
     combolist.append(" " + bible.name)
 combobox = Combobox(win, textvariable = StringVar(), values=combolist)
-combobox.current(3)
 combobox.bind("<<ComboboxSelected>>", comboboxSelect)
 combobox.pack(side=TOP, fill=X)
 
-# ListBox
+# BookBox
 
 def makeBookList():
     bookBox.delete(0,END)
@@ -214,9 +213,8 @@ def bookBoxSelect(event=None):
 bookBox = Listbox(win, height=4)
 bookBox.bind("<<ListboxSelect>>", bookBoxSelect)
 bookBox.pack(side=LEFT, fill=BOTH)
-makeBookList()
 
-# ListBox
+# ChapterBox
 
 def makeChapterList():
     chapterBox.delete(0,END)
@@ -238,7 +236,6 @@ def chapterBoxSelect(event=None):
 chapterBox = Listbox(win, height=4)
 chapterBox.bind("<<ListboxSelect>>", chapterBoxSelect)
 chapterBox.pack(side=LEFT, fill=BOTH)
-makeChapterList()
 
 # Popup Menu
 
@@ -290,17 +287,35 @@ def loadChapter():
 # Config
 
 def saveConfig():
-    pass
+    config = configparser.ConfigParser()
+    config.read("config.ini", "utf8")
+
+    if "Application" not in config.sections():
+        config.add_section("Application")
+
+    config.set('Application','FileName', currBible().fileName)
+
+    f = open('config.ini', 'w', encoding='utf8')
+    config.write(f)
+    f.close()
 
 def readConfig():
     config = configparser.ConfigParser()
     config.read("config.ini", "utf8")
-    print(config["Application"]["FileName"])
+
+    try:
+        fileName = config.get('Application','FileName')
+        shelf.setCurrentByName(fileName)
+    except:
+        pass
 
 # Init
 
 readConfig()
-currVerse = currBible().firstVerse()
+combobox.current(shelf.current)
+makeBookList()
+makeChapterList()
 loadChapter()
 
 win.mainloop()
+saveConfig()
