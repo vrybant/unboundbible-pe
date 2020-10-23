@@ -7,6 +7,7 @@ Open Source Application
 
 import os
 import re
+import configparser
 
 from tkinter import *
 from tkinter import ttk
@@ -23,32 +24,20 @@ if os.name == 'nt': win.iconbitmap('icons/unboundbible.ico')
 def popup(event):
     cmenu.tk_popup(event.x_win, event.y_win, 0)
 
-def show_info_bar():
-        val = showinbar.get()
-        if val:
-                infobar.pack(expand=NO, fill=None, side=RIGHT, anchor='se')
-        elif not val:
-                infobar.pack_forget()
-
 def theme(event=None):
         global bgc,fgc
         val = themechoice.get()
         clrs = clrschms.get(val)
         fgc, bgc = clrs.split('.')
         fgc, bgc = '#'+fgc, '#'+bgc
+        bookBox.config(bg=bgc, fg=fgc)
+        chapterBox.config(bg=bgc, fg=fgc)
         memo.config(bg=bgc, fg=fgc)
 
-def highlight_line(interval=100):
-        memo.tag_remove("active_line", 1.0, "end")
-        memo.tag_add("active_line", "insert linestart", "insert lineend+1c")
-        memo.after(interval, toggle_highlight)
-
-def undo_highlight():
-        memo.tag_remove("active_line", 1.0, "end")
-
-def toggle_highlight(event=None):
-    val = hltln.get()
-    undo_highlight() if not val else highlight_line()
+#       combostyle = ttk.Style()
+#       settings = {'TCombobox':{'configure':{'selectbackground': 'red','fieldbackground': 'blue','background': 'green'}}}
+#       combostyle.theme_create('combostyle', parent='alt', settings = settings)
+#       combostyle.theme_use('combostyle')
 
 ##########################################################
 
@@ -206,14 +195,9 @@ editmenu.add_command(label="Select All", underline=7, accelerator='Ctrl+A', comm
 menubar.add_cascade(label="Edit", menu=editmenu)
 
 viewmenu = Menu(menubar, tearoff=0)
-showln = IntVar()
-showln.set(1)
-viewmenu.add_checkbutton(label="Show Line Number", variable=showln)
 showinbar = IntVar()
 showinbar.set(1)
-viewmenu.add_checkbutton(label="Show Info Bar at Bottom", variable=showinbar, command=show_info_bar)
 hltln = IntVar()
-viewmenu.add_checkbutton(label="Highlight Current Line", onvalue=1, offvalue=0, variable=hltln, command=toggle_highlight)
 themesmenu = Menu(menubar, tearoff=0)
 viewmenu.add_cascade(label="Themes", menu=themesmenu)
 
@@ -253,6 +237,14 @@ for i, icon in enumerate(icons):
     toolbar.pack(side=LEFT)
 
 shortcutbar.pack(expand=NO, fill=X)
+
+# Status Bar
+
+def updateStatus():
+    pass
+
+status = Label(win, text="")
+status.pack(expand=NO, fill=X, side=BOTTOM, anchor='se')
 
 # Text Widget & ScrollBar widget
 
@@ -330,11 +322,6 @@ chapterBox.bind("<<ListboxSelect>>", chapterBoxSelect)
 chapterBox.pack(side=LEFT, fill=BOTH)
 makeChapterList()
 
-# Info Bar
-
-infobar = Label(memo, text='Line: 1 | Column: 0')
-infobar.pack(expand=NO, fill=None, side=RIGHT, anchor='se')
-
 # Popup Menu
 
 cmenu = Menu(memo)
@@ -389,7 +376,7 @@ def loadChapter():
     memoLoadText(getChapter(), True)
     makeChapterList()
 
-# init
+# Init
 
 currVerse = currBible().firstVerse()
 loadChapter()

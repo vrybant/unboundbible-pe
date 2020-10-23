@@ -1,5 +1,5 @@
 #
-#  module.py
+#  bible.py
 #  Unbound Bible Python Edition
 #
 
@@ -214,8 +214,8 @@ class Shelf():
     def isEmpty(self) -> bool:
         return False if self.bibles else True
 
-currVerse = Verse()
-shelf = Shelf()
-
 def currBible():
     return shelf.bibles[shelf.current]
+
+currVerse = Verse()
+shelf = Shelf()
