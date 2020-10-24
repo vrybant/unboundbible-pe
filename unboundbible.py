@@ -41,19 +41,13 @@ def theme(event=None):
 #       combostyle.theme_create('combostyle', parent='alt', settings = settings)
 #       combostyle.theme_use('combostyle')
 
-##########################################################
+#######################################################################
 
 def about(event=None):
     messagebox.showinfo("About","Unbound Bible Python Edition \n\n Open Source Application")
 
 def help_box(event=None):
     pass
-
-def exit_editor(event=None):
-#   if messagebox.askokcancel("Quit", "Do you really want to quit?"):
-    win.destroy()
-
-win.protocol('WM_DELETE_WINDOW', exit_editor) # override close button and redirect to exit_editor
 
 #######################################################################
 
@@ -98,6 +92,10 @@ def search_for(needle,cssnstv, memo, t2,e) :
 def copy(event=None):
     memo.event_generate("<<Copy>>")
 
+
+def on_exit(event=None):
+    win.destroy()
+
 ######################################################################
 
 copyicon  = PhotoImage(file='icons/copy.gif')
@@ -106,7 +104,7 @@ menubar   = Menu(win)
 filemenu = Menu(menubar, tearoff=0 )
 filemenu.add_command(label="Find",underline= 0, accelerator='Ctrl+F', command=on_find)
 filemenu.add_separator()
-filemenu.add_command(label="Exit", accelerator='Alt+F4', command=exit_editor)
+filemenu.add_command(label="Exit", accelerator='Alt+F4', command=on_exit)
 menubar.add_cascade(label="Tools", menu=filemenu)
 
 editmenu = Menu(menubar, tearoff=0)
@@ -155,6 +153,13 @@ for i, icon in enumerate(icons):
     toolbar = Button(shortcutbar, image=tbicon, command=cmd)
     toolbar.image = tbicon
     toolbar.pack(side=LEFT)
+
+label = Label(shortcutbar, text='')
+label.pack(side=RIGHT)
+
+entryVar = StringVar()
+entry = Entry(shortcutbar, width=25, textvariable=entryVar)
+entry.pack(side=RIGHT)
 
 shortcutbar.pack(expand=NO, fill=X)
 
@@ -313,6 +318,7 @@ def readConfig():
     try:
         fileName = config.get('Application','filename')
         shelf.setCurrentByName(fileName)
+        combobox.current(shelf.current)
 
         left = config.get('Application', 'left')
         top  = config.get('Application', 'top')
@@ -321,12 +327,12 @@ def readConfig():
 
         win.geometry(f'{width}x{height}+{left}+{top}')
     except:
+        combobox.current(0)
         win.geometry('640x480')
 
 # Init
 
 readConfig()
-combobox.current(shelf.current)
 makeBookList()
 loadChapter()
 
