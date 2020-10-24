@@ -92,8 +92,8 @@ def search_for(needle,cssnstv, memo, t2,e) :
 def copy(event=None):
     memo.event_generate("<<Copy>>")
 
-
 def on_exit(event=None):
+    saveConfig()
     win.destroy()
 
 ######################################################################
@@ -336,10 +336,6 @@ readConfig()
 makeBookList()
 loadChapter()
 
-def on_closing():
-    saveConfig()
-    win.destroy()
-
-win.protocol("WM_DELETE_WINDOW", on_closing)
+win.protocol("WM_DELETE_WINDOW", on_exit)
 win.deiconify()
 win.mainloop()
