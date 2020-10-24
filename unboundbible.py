@@ -295,7 +295,12 @@ def saveConfig():
     if "Application" not in config.sections():
         config.add_section("Application")
 
-    config.set('Application','FileName', currBible().fileName)
+    config.set('Application','filename', currBible().fileName)
+
+    config.set('Application','left', f'{win.winfo_x()}')
+    config.set('Application','top',  f'{win.winfo_y()}')
+    config.set('Application','width',  f'{win.winfo_width()}')
+    config.set('Application','height', f'{win.winfo_height()}')
 
     f = open('config.ini', 'w', encoding='utf8')
     config.write(f)
@@ -306,10 +311,17 @@ def readConfig():
     config.read("config.ini", "utf8")
 
     try:
-        fileName = config.get('Application','FileName')
+        fileName = config.get('Application','filename')
         shelf.setCurrentByName(fileName)
+
+        left = config.get('Application', 'left')
+        top  = config.get('Application', 'top')
+        width  = config.get('Application', 'width')
+        height = config.get('Application', 'height')
+
+        win.geometry(f'{width}x{height}+{left}+{top}')
     except:
-        pass
+        win.geometry('640x480')
 
 # Init
 
@@ -318,8 +330,10 @@ combobox.current(shelf.current)
 makeBookList()
 loadChapter()
 
-win.geometry('640x480')
+def on_closing():
+    saveConfig()
+    win.destroy()
+
+win.protocol("WM_DELETE_WINDOW", on_closing)
 win.deiconify()
 win.mainloop()
-
-saveConfig()
