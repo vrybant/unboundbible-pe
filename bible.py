@@ -166,7 +166,7 @@ class Bible(Module):
 
     def getRange(self, verse: Verse) -> [str]:
         query = f"SELECT * FROM Bible WHERE Book={verse.book} AND Chapter={verse.chapter} " + \
-                f"AND Verse={verse.number} AND Verse<{verse.number + verse.count}"
+                f"AND Verse>={verse.number} AND Verse<{verse.number + verse.count}"
         try:
             self.cursor.execute(query)
             rows = self.cursor.fetchall()
@@ -179,6 +179,16 @@ class Bible(Module):
             return result
         except:
             print("getRange exception")
+            return []
+
+    def getSearch(self, target: str) -> [dict]:
+        target = 'sanctification'
+        query = f"SELECT * FROM Bible WHERE Scripture LIKE '%{target}%'"
+        try:
+            self.cursor.execute(query)
+            return self.cursor.fetchall()
+        except:
+            print("getSearch exception")
             return []
 
     def goodLink(self, verse: Verse) -> bool:

@@ -266,49 +266,28 @@ def loadChapter():
     makeChapterList()
 
 def getSearch(target: str) -> str:
-    strings = currBible().getSearch(target)
+    rows = currBible().getSearch(target)
     text = ""
-    for st in strings:
-        s = applyTags(st)
-        text += f"{s}\n"
+    for row in rows:
+        book    = row.get("Book", "")
+        chapter = row.get("Chapter", "")
+        verse   = row.get("Verse", "")
+        script  = row.get("Scripture", "")
+        s = applyTags(script)
+
+#       link = currBible!.verseToString(content.verse, full: true) {
+#       text = content.text.highlight(with: "<r>", target: searchList, options: searchOption)
+#       result += "<l>\(link)</l> \(text)\n\n"
+
+        text += f"{book} {chapter}:{verse} {s}\n\n"
     return text
-
-"""
-func get_Search(string: String) -> (string: String, count: Int) {
-    var result = ""
-    var count = 0
-    let target = searchOption.contains(.caseSensitive) ? string : string.lowercased()
-    let searchList = target.components(separatedBy: " ")
-    let range = currentSearchRange()
-
-    if let searchResult = currBible!.search(string: target, options: searchOption, range: range) {
-        for content in searchResult {
-            if let link = currBible!.verseToString(content.verse, full: true) {
-                let text = content.text.highlight(with: "<r>", target: searchList, options: searchOption)
-                result += "<l>\(link)</l> \(text)\n\n"
-            }
-        }
-        count = searchResult.count
-    }
-
-    return (result, count)
-
-"""
 
 def loadSearch(text: str):
 #   if len(text) < 3:  return
-    print(text)
-    """
-    let data = get_Search(string: text)
-    var string = data.string
-
-    if data.count == 0 {
-        let message = LocalizedString("You search for % produced no results.")
-        string = "\(message.replace("%", with: text.quoted))"
-    }
-
-    """
-    memoLoad(getSearch(text))
+    data = getSearch(text)
+    if not data:
+        message = "You search for % produced no results."
+    memoLoad(data)
     memo.focus_set()
 #   mainView.updateStatus("\(data.count) \(status)")
 
