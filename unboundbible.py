@@ -56,38 +56,7 @@ def select_all(event=None):
         return
 
 def on_find():
-        t2 = Toplevel(win)
-        t2.title('Find')
-        t2.geometry('262x65+200+250')
-        t2.transient(win)
-        Label(t2, text="Find All:").grid(row=0, column=0, sticky='e')
-        v=StringVar()
-        e = Entry(t2, width=25, textvariable=v)
-        e.grid(row=0, column=1, padx=2, pady=2, sticky='we')
-        e.focus_set()
-        c=IntVar()
-        Checkbutton(t2, text='Ignore Case', variable=c).grid(row=1, column=1, sticky='e', padx=2, pady=2)
-        Button(t2, text="Find All", underline=0,  command=lambda: search_for(v.get(),c.get(), memo, t2,e)).grid(row=0, column=2, sticky='e'+'w', padx=2, pady=2)
-        def close_search():
-                memo.tag_remove('match', '1.0', END)
-                t2.destroy()
-        t2.protocol('WM_DELETE_WINDOW', close_search) #override close button
-
-def search_for(needle,cssnstv, memo, t2,e) :
-        memo.tag_remove('match', '1.0', END)
-        count =0
-        if needle:
-                pos = '1.0'
-                while True:
-                    pos = memo.search(needle, pos, nocase=cssnstv, stopindex=END)
-                    if not pos: break
-                    lastpos = '%s+%dc' % (pos, len(needle))
-                    memo.tag_add('match', pos, lastpos)
-                    count += 1
-                    pos = lastpos
-                memo.tag_config('match', foreground='red', background='yellow')
-        e.focus_set()
-        t2.title('%d matches found' %count)
+    entry.focus_set()
 
 def copy(event=None):
     memo.event_generate("<<Copy>>")
@@ -150,11 +119,20 @@ for i, icon in enumerate(icons):
     toolbar.image = tbicon
     toolbar.pack(side=LEFT)
 
-label = Label(shortcutbar, text='')
-label.pack(side=RIGHT)
+# Separator
+
+separator = Label(shortcutbar, text='')
+separator.pack(side=RIGHT)
+
+# Entry
+
+def return_entry(event=None):
+    content = entry.get()
+    print(content)
 
 entryVar = StringVar()
 entry = Entry(shortcutbar, width=25, textvariable=entryVar)
+entry.bind('<Return>', return_entry)
 entry.pack(side=RIGHT)
 
 shortcutbar.pack(expand=NO, fill=X)
@@ -167,7 +145,7 @@ def updateStatus():
 status = Label(win, text="")
 status.pack(expand=NO, fill=X, side=BOTTOM, anchor='se')
 
-# Text Widget & ScrollBar widget
+# Text & ScrollBar
 
 def memoLoad(text: str):
     memo.delete(1.0, END)
