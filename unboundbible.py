@@ -27,19 +27,19 @@ def popup(event):
     cmenu.tk_popup(event.x_win, event.y_win, 0)
 
 def theme(event=None):
-        global bgc,fgc
-        val = themechoice.get()
-        clrs = clrschms.get(val)
-        fgc, bgc = clrs.split('.')
-        fgc, bgc = '#'+fgc, '#'+bgc
-        bookBox.config(bg=bgc, fg=fgc)
-        chapterBox.config(bg=bgc, fg=fgc)
-        memo.config(bg=bgc, fg=fgc)
+    global bgc,fgc
+    val = themechoice.get()
+    clrs = clrschms.get(val)
+    fgc, bgc = clrs.split('.')
+    fgc, bgc = '#'+fgc, '#'+bgc
+    bookBox.config(bg=bgc, fg=fgc)
+    chapterBox.config(bg=bgc, fg=fgc)
+    memo.config(bg=bgc, fg=fgc)
 
-#       combostyle = ttk.Style()
-#       settings = {'TCombobox':{'configure':{'selectbackground': 'red','fieldbackground': 'blue','background': 'green'}}}
-#       combostyle.theme_create('combostyle', parent='alt', settings = settings)
-#       combostyle.theme_use('combostyle')
+#   combostyle = ttk.Style()
+#   settings = {'TCombobox':{'configure':{'selectbackground': 'red','fieldbackground': 'blue','background': 'green'}}}
+#   combostyle.theme_create('combostyle', parent='alt', settings = settings)
+#   combostyle.theme_use('combostyle')
 
 #######################################################################
 
@@ -127,8 +127,8 @@ separator.pack(side=RIGHT)
 # Entry
 
 def return_entry(event=None):
-    content = entry.get()
-    print(content)
+    text = entry.get()
+    loadSearch(text)
 
 entryVar = StringVar()
 entry = Entry(shortcutbar, width=25, textvariable=entryVar)
@@ -264,6 +264,53 @@ def getChapter() -> str:
 def loadChapter():
     memoLoad(getChapter())
     makeChapterList()
+
+def getSearch(target: str) -> str:
+    strings = currBible().getSearch(target)
+    text = ""
+    for st in strings:
+        s = applyTags(st)
+        text += f"{s}\n"
+    return text
+
+"""
+func get_Search(string: String) -> (string: String, count: Int) {
+    var result = ""
+    var count = 0
+    let target = searchOption.contains(.caseSensitive) ? string : string.lowercased()
+    let searchList = target.components(separatedBy: " ")
+    let range = currentSearchRange()
+
+    if let searchResult = currBible!.search(string: target, options: searchOption, range: range) {
+        for content in searchResult {
+            if let link = currBible!.verseToString(content.verse, full: true) {
+                let text = content.text.highlight(with: "<r>", target: searchList, options: searchOption)
+                result += "<l>\(link)</l> \(text)\n\n"
+            }
+        }
+        count = searchResult.count
+    }
+
+    return (result, count)
+
+"""
+
+def loadSearch(text: str):
+#   if len(text) < 3:  return
+    print(text)
+    """
+    let data = get_Search(string: text)
+    var string = data.string
+
+    if data.count == 0 {
+        let message = LocalizedString("You search for % produced no results.")
+        string = "\(message.replace("%", with: text.quoted))"
+    }
+
+    """
+    memoLoad(getSearch(text))
+    memo.focus_set()
+#   mainView.updateStatus("\(data.count) \(status)")
 
 # Config
 
