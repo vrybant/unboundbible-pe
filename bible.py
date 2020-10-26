@@ -187,11 +187,22 @@ class Bible(Module):
             print("getRange exception")
             return []
 
-    def getSearch(self, target: str) -> [dict]:
+    def getSearch(self, target: str) -> [str]:
         query = f"SELECT * FROM Bible WHERE Scripture LIKE '%{target}%'"
         try:
             self.cursor.execute(query)
-            return self.cursor.fetchall()
+            rows = self.cursor.fetchall()
+            result = []
+            for row in rows:
+                book    = row.get("Book",    0)
+                chapter = row.get("Chapter", 0)
+                verse   = row.get("Verse",   0)
+                script  = row.get("Scripture", "")
+
+                title = currBible().bookByNum(book).title
+                text = f"{title} {chapter}:{verse} {script}"
+                result.append(text)
+            return result
         except:
             print("getSearch exception")
             return []

@@ -139,9 +139,6 @@ shortcutbar.pack(expand=NO, fill=X)
 
 # Status Bar
 
-def updateStatus():
-    pass
-
 status = Label(win, text="")
 status.pack(expand=NO, fill=X, side=BOTTOM, anchor='se')
 
@@ -253,41 +250,27 @@ def applyTags(s: str) -> str:
     s = re.sub(r'<.*?>','',s)
     return s
 
-def getChapter() -> str:
+def loadChapter():
     strings = currBible().getChapter(currVerse)
     text = ""
     for i in range(len(strings)):
         s = applyTags(strings[i])
         text += f" {i+1} {s}\n"
-    return text
-
-def loadChapter():
-    memoLoad(getChapter())
+    memoLoad(text)
     makeChapterList()
-
-def getSearch(target: str) -> str:
-    rows = currBible().getSearch(target)
-    text = ""
-    for row in rows:
-        book    = row.get("Book",    0)
-        chapter = row.get("Chapter", 0)
-        verse   = row.get("Verse",   0)
-        script  = row.get("Scripture", "")
-
-        script = applyTags(script)
-        title = currBible().bookByNum(book).title
-
-        text += f"{title} {chapter}:{verse} {script}\n\n"
-    return text
 
 def loadSearch(target: str):
     if len(target) < 3:  return
-    data = getSearch(target)
-    if not data:
-        data = f"You search for '{target}' produced no results."
-    memoLoad(data)
+    strings = currBible().getSearch(target)
+    text = ""
+    for s in strings:
+        s = applyTags(s)
+        text += f"{s}\n\n"
+    if not strings:
+        text = f"You search for '{target}' produced no results."
+    memoLoad(text)
     memo.focus_set()
-#   updateStatus(f"{count} verses found.")
+    status['text'] = f" {len(strings)} verses found."
 
 # Config
 
