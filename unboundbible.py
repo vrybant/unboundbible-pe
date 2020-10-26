@@ -101,23 +101,11 @@ def on_exit(event=None):
 copyicon  = PhotoImage(file='icons/copy.gif')
 menubar   = Menu(win)
 
-filemenu = Menu(menubar, tearoff=0 )
-filemenu.add_command(label="Find",underline= 0, accelerator='Ctrl+F', command=on_find)
-filemenu.add_separator()
-filemenu.add_command(label="Exit", accelerator='Alt+F4', command=on_exit)
-menubar.add_cascade(label="Tools", menu=filemenu)
+toolsmenu = Menu(menubar, tearoff=0 )
+toolsmenu.add_command(label="Find",underline= 0, accelerator='Ctrl+F', command=on_find)
 
-editmenu = Menu(menubar, tearoff=0)
-editmenu.add_command(label="Copy", compound=LEFT, image=copyicon,  accelerator='Ctrl+C', command=copy)
-editmenu.add_command(label="Select All", underline=7, accelerator='Ctrl+A', command=select_all)
-menubar.add_cascade(label="Edit", menu=editmenu)
-
-viewmenu = Menu(menubar, tearoff=0)
-showinbar = IntVar()
-showinbar.set(1)
-hltln = IntVar()
 themesmenu = Menu(menubar, tearoff=0)
-viewmenu.add_cascade(label="Themes", menu=themesmenu)
+toolsmenu.add_cascade(label="Themes", menu=themesmenu)
 
 clrschms = {
 '1. Default White': '000000.FFFFFF',
@@ -133,7 +121,15 @@ themechoice= StringVar()
 themechoice.set('1. Default White')
 for k in sorted(clrschms):
     themesmenu.add_radiobutton(label=k, variable=themechoice, command=theme)
-menubar.add_cascade(label="View", menu=viewmenu)
+
+menubar.add_cascade(label="Tools", menu=toolsmenu)
+toolsmenu.add_separator()
+toolsmenu.add_command(label="Exit", accelerator='Alt+F4', command=on_exit)
+
+editmenu = Menu(menubar, tearoff=0)
+editmenu.add_command(label="Copy", compound=LEFT, image=copyicon,  accelerator='Ctrl+C', command=copy)
+editmenu.add_command(label="Select All", underline=7, accelerator='Ctrl+A', command=select_all)
+menubar.add_cascade(label="Edit", menu=editmenu)
 
 aboutmenu = Menu(menubar, tearoff=0)
 aboutmenu.add_command(label="About", command=about)
