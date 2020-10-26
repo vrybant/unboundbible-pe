@@ -89,7 +89,7 @@ class Module:
 
 class Bible(Module):
 
-    class _Book:
+    class Book:
         title   = ""
         abbr    = ""
         number  = 0
@@ -114,7 +114,7 @@ class Bible(Module):
         for row in rows:
             number = row.get("Number", 0)
             if number > 0:
-                book = self._Book()
+                book = self.Book()
                 book.number = number
                 book.title = row.get("Name", "")
                 book.abbr = row.get("Abbreviation", "")
@@ -126,10 +126,16 @@ class Bible(Module):
         v.book = self._books[0].number
         return v
 
-    def bookByName(self, name: str) -> int:
+    def bookByNum(self, number: int) -> Book:
+        for book in self._books:
+            if book.number == number:
+                return book
+        return None
+
+    def bookByName(self, name: str) -> Book:
         for book in self._books:
             if book.title == name:
-                return book.number
+                return book
         return None
 
     def getTitles(self) -> [str]:
@@ -182,7 +188,6 @@ class Bible(Module):
             return []
 
     def getSearch(self, target: str) -> [dict]:
-        target = 'sanctification'
         query = f"SELECT * FROM Bible WHERE Scripture LIKE '%{target}%'"
         try:
             self.cursor.execute(query)

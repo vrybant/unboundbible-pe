@@ -189,7 +189,7 @@ def bookBoxSelect(event=None):
             selection = curselection[0]
             titles = currBible().getTitles()
             sbook = titles[selection]
-            book = currBible().bookByName(sbook)
+            book = currBible().bookByName(sbook).number
             if book:
                 currVerse.reset()
                 currVerse.book = book
@@ -269,27 +269,25 @@ def getSearch(target: str) -> str:
     rows = currBible().getSearch(target)
     text = ""
     for row in rows:
-        book    = row.get("Book", "")
-        chapter = row.get("Chapter", "")
-        verse   = row.get("Verse", "")
+        book    = row.get("Book",    0)
+        chapter = row.get("Chapter", 0)
+        verse   = row.get("Verse",   0)
         script  = row.get("Scripture", "")
-        s = applyTags(script)
 
-#       link = currBible!.verseToString(content.verse, full: true) {
-#       text = content.text.highlight(with: "<r>", target: searchList, options: searchOption)
-#       result += "<l>\(link)</l> \(text)\n\n"
+        script = applyTags(script)
+        title = currBible().bookByNum(book).title
 
-        text += f"{book} {chapter}:{verse} {s}\n\n"
+        text += f"{title} {chapter}:{verse} {script}\n\n"
     return text
 
-def loadSearch(text: str):
-#   if len(text) < 3:  return
-    data = getSearch(text)
+def loadSearch(target: str):
+    if len(target) < 3:  return
+    data = getSearch(target)
     if not data:
-        message = "You search for % produced no results."
+        data = f"You search for '{target}' produced no results."
     memoLoad(data)
     memo.focus_set()
-#   mainView.updateStatus("\(data.count) \(status)")
+#   updateStatus(f"{count} verses found.")
 
 # Config
 
