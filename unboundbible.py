@@ -117,7 +117,7 @@ win.config(menu=menubar) # Returning defined setting for widget
 
 shortcutbar = Frame(win,  height=25)
 
-icons = ['copy', 'compare', 'on_find', 'about']
+icons = ['copy', 'on_find', 'about']
 for i, icon in enumerate(icons):
     tbicon = PhotoImage(file=f'icons/{icon}.gif')
     cmd = eval(icon)
@@ -150,11 +150,15 @@ status.pack(expand=NO, fill=X, side=BOTTOM, anchor='se')
 
 # Text & ScrollBar
 
+def memo_on_click(event=None):
+    print(memo.index(INSERT))
+
 def memoLoad(text: str):
     memo.delete(1.0, END)
     memo.insert(1.0, text)
 
 memo = Text(win, wrap=WORD, undo=True)
+memo.bind('<Button-1>', memo_on_click)
 memo.pack(side=RIGHT, expand=YES, fill=BOTH)
 
 scroll=Scrollbar(memo)
