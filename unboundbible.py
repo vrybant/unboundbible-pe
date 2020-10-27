@@ -61,13 +61,19 @@ def on_find():
 def copy(event=None):
     memo.event_generate("<<Copy>>")
 
+def compare(event=None):
+    print('compare')
+    pass
+
 def on_exit(event=None):
     saveConfig()
     win.destroy()
 
 ######################################################################
 
-copyicon  = PhotoImage(file='icons/copy.gif')
+copyicon = PhotoImage(file='icons/copy.gif')
+compricon = PhotoImage(file='icons/compare.gif')
+
 menubar   = Menu(win)
 
 toolsmenu = Menu(menubar, tearoff=0 )
@@ -111,7 +117,7 @@ win.config(menu=menubar) # Returning defined setting for widget
 
 shortcutbar = Frame(win,  height=25)
 
-icons = ['copy', 'on_find', 'about']
+icons = ['copy', 'compare', 'on_find', 'about']
 for i, icon in enumerate(icons):
     tbicon = PhotoImage(file=f'icons/{icon}.gif')
     cmd = eval(icon)
