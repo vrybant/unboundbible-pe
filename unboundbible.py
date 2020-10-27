@@ -20,7 +20,7 @@ from bible import *
 
 win = Tk()
 win.withdraw()
-win.title("Unbound Bible Python Edition")
+win.title("Unbound Bible PE")
 if os.name == 'nt': win.iconbitmap('icons/unboundbible.ico')
 
 def popup(event):
@@ -164,6 +164,7 @@ def comboboxSelect(event=None):
         shelf.setCurrent(index)
         makeBookList()
         goToVerse(currVerse)
+        status['text'] = " " + currBible().fileName + " | " + currBible().info
 
 combolist = []
 for bible in shelf.bibles:
@@ -316,6 +317,7 @@ def readConfig():
 readConfig()
 makeBookList()
 loadChapter()
+status['text'] = " " + currBible().fileName + " | " + currBible().info
 
 win.protocol("WM_DELETE_WINDOW", on_exit)
 win.deiconify()
