@@ -24,7 +24,7 @@ win.title("Unbound Bible PE")
 if os.name == 'nt': win.iconbitmap('icons/unboundbible.ico')
 
 def popup(event):
-    cmenu.tk_popup(event.x_win, event.y_win, 0)
+    pmmenu.tk_popup(event.x, event.y, 0)
 
 def theme(event=None):
     global bgc,fgc
@@ -154,8 +154,10 @@ def memo_on_click(event=None):
     print(memo.index(INSERT))
 
 def memoLoad(text: str):
+    memo.config(state=NORMAL)
     memo.delete(1.0, END)
     memo.insert(1.0, text)
+    memo.config(state=DISABLED)
 
 memo = Text(win, wrap=WORD, undo=True)
 memo.bind('<Button-1>', memo_on_click)
@@ -232,11 +234,11 @@ chapterBox.pack(side=LEFT, fill=BOTH)
 
 # Popup Menu
 
-cmenu = Menu(memo)
-cmd = eval('copy')
-cmenu.add_command(label=i, compound=LEFT, command=cmd)
-cmenu.add_separator()
-cmenu.add_command(label='Select All', underline=7, command=select_all)
+pmmenu = Menu(memo)
+cmd_copy = eval('copy')
+pmmenu.add_command(label='Copy', compound=LEFT, command=cmd_copy)
+pmmenu.add_separator()
+pmmenu.add_command(label='Select All', underline=7, command=select_all)
 memo.bind("<Button-3>", popup)
 
 # Events
