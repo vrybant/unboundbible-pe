@@ -24,6 +24,12 @@ win.title("Unbound Bible PE")
 if os.name == 'nt': win.iconbitmap('icons/unboundbible.ico')
 
 def popup(event):
+#   x = win.clipboard_get()
+    try:
+        x = memo.selection_get()
+        print(x)
+    except:
+        pass
     pmmenu.tk_popup(event.x, event.y, 0)
 
 def theme(event=None):
@@ -157,7 +163,7 @@ def memoLoad(text: str):
     memo.config(state=NORMAL)
     memo.delete(1.0, END)
     memo.insert(1.0, text)
-    memo.config(state=DISABLED)
+#   memo.config(state=DISABLED)
 
 memo = Text(win, wrap=WORD, undo=True)
 memo.bind('<Button-1>', memo_on_click)
