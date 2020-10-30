@@ -30,7 +30,7 @@ def popup(event):
         print(x)
     except:
         pass
-    pmmenu.tk_popup(event.x, event.y, 0)
+    pmmenu.tk_popup(event.x_root, event.y_root, 0)
 
 def theme(event=None):
     global bgc,fgc
@@ -239,10 +239,9 @@ chapterBox.pack(side=LEFT, fill=BOTH)
 
 # Popup Menu
 
-pmmenu = Menu(memo)
+pmmenu = Menu(memo, tearoff=0)
 cmd_copy = eval('copy')
 pmmenu.add_command(label='Copy', compound=LEFT, command=cmd_copy)
-pmmenu.add_separator()
 pmmenu.add_command(label='Select All', underline=7, command=select_all)
 memo.bind("<Button-3>", popup)
 
