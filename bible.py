@@ -138,6 +138,16 @@ class Bible(Module):
                 return book
         return None
 
+    def verseToStr(self, verse: Verse, full: bool) -> str:
+        book = self.bookByNum(verse.book)
+        if not book: return ''
+        title = book.title if full else book.abbr
+        space = '' if '.' in title else ' '
+        result = f"{title}{space}{verse.chapter}:{verse.number}"
+        if verse.count > 1:
+            result += '-' + str(verse.number + verse.count - 1)
+        return result
+
     def getTitles(self) -> [str]:
         result = []
         for book in self._books:
