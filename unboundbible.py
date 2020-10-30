@@ -290,7 +290,13 @@ def loadSearch(target: str):
     status['text'] = f" {len(strings)} verses found."
 
 def loadCompare():
-    currVerse.count = 4
+    try:
+        num = memo.selection_get()
+        currVerse.number = int(num)
+    except:
+        messagebox.showwarning("Tooltip","Select the verse number!")
+        return
+
     text = currBible().verseToStr(currVerse, True) + '\n\n'
     for bible in shelf.bibles:
         value = bible.getRange(currVerse)
