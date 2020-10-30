@@ -24,12 +24,6 @@ win.title("Unbound Bible PE")
 if os.name == 'nt': win.iconbitmap('icons/unboundbible.ico')
 
 def popup(event):
-#   x = win.clipboard_get()
-    try:
-        x = memo.selection_get()
-        print(x)
-    except:
-        pass
     pmmenu.tk_popup(event.x_root, event.y_root, 0)
 
 def theme(event=None):
@@ -58,6 +52,7 @@ def help_box(event=None):
 #######################################################################
 
 def select_all(event=None):
+        memo.focus_set()
         memo.tag_add('sel', '1.0', 'end')
         return
 
@@ -66,6 +61,7 @@ def on_find():
 
 def copy(event=None):
     memo.event_generate("<<Copy>>")
+#   s = win.clipboard_get()
 
 def compare(event=None):
     loadCompare()
