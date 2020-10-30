@@ -49,22 +49,20 @@ def about(event=None):
 def help_box(event=None):
     pass
 
-#######################################################################
-
-def select_all(event=None):
-        memo.focus_set()
-        memo.tag_add('sel', '1.0', 'end')
-        return
-
-def on_find():
+def find(event=None):
     entry.focus_set()
+
+def compare(event=None):
+    loadCompare()
 
 def copy(event=None):
     memo.event_generate("<<Copy>>")
 #   s = win.clipboard_get()
 
-def compare(event=None):
-    loadCompare()
+def select_all(event=None):
+        memo.focus_set()
+        memo.tag_add('sel', '1.0', 'end')
+        return
 
 def on_exit(event=None):
     saveConfig()
@@ -78,7 +76,8 @@ compricon = PhotoImage(file='icons/compare.gif')
 menubar   = Menu(win)
 
 toolsmenu = Menu(menubar, tearoff=0 )
-toolsmenu.add_command(label="Find",underline= 0, accelerator='Ctrl+F', command=on_find)
+toolsmenu.add_command(label="Find",underline= 0, accelerator='Ctrl+F', command=find)
+toolsmenu.add_command(label="Compare",underline= 0, command=compare)
 
 themesmenu = Menu(menubar, tearoff=0)
 toolsmenu.add_cascade(label="Themes", menu=themesmenu)
@@ -118,11 +117,10 @@ win.config(menu=menubar) # Returning defined setting for widget
 
 shortcutbar = Frame(win,  height=25)
 
-icons = ['copy', 'compare', 'on_find', 'about']
+icons = ['copy', 'compare', 'find', 'about']
 for i, icon in enumerate(icons):
     tbicon = PhotoImage(file=f'icons/{icon}.gif')
-    cmd = eval(icon)
-    toolbar = Button(shortcutbar, image=tbicon, command=cmd)
+    toolbar = Button(shortcutbar, image=tbicon, command=eval(icon))
     toolbar.image = tbicon
     toolbar.pack(side=LEFT)
 
@@ -245,8 +243,8 @@ memo.bind("<Button-3>", popup)
 
 memo.bind('<Control-A>', select_all)
 memo.bind('<Control-a>', select_all)
-memo.bind('<Control-f>', on_find)
-memo.bind('<Control-F>', on_find)
+memo.bind('<Control-f>', find)
+memo.bind('<Control-F>', find)
 memo.bind('<KeyPress-F1>', help_box)
 
 memo.tag_configure("active_line", background="ivory2")
