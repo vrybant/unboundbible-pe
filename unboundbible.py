@@ -55,6 +55,9 @@ def find(event=None):
 def compare(event=None):
     loadCompare()
 
+def strong(event=None):
+    loadCompare()
+
 def copy(event=None):
     memo.event_generate("<<Copy>>")
 #   s = win.clipboard_get()
@@ -117,7 +120,7 @@ win.config(menu=menubar) # Returning defined setting for widget
 
 shortcutbar = Frame(win,  height=25)
 
-icons = ['copy', 'compare', 'find', 'about']
+icons = ['copy', 'strong', 'compare', 'find', 'about']
 for i, icon in enumerate(icons):
     tbicon = PhotoImage(file=f'icons/{icon}.gif')
     toolbar = Button(shortcutbar, image=tbicon, command=eval(icon))
@@ -150,7 +153,8 @@ status.pack(expand=NO, fill=X, side=BOTTOM, anchor='se')
 # Text & ScrollBar
 
 def memo_on_click(event=None):
-    print(memo.index(INSERT))
+    pass
+#   print(memo.index(INSERT))
 
 def memoLoad(text: str):
     memo.config(state=NORMAL)
@@ -175,7 +179,7 @@ def comboboxSelect(event=None):
         shelf.setCurrent(index)
         makeBookList()
         goToVerse(currVerse)
-        status['text'] = " " + currBible().fileName + " | " + currBible().info
+        status['text'] = " " + currBible().filename + " | " + currBible().info
 
 combolist = []
 for bible in shelf.bibles:
@@ -308,7 +312,7 @@ def saveConfig():
     if "Application" not in config.sections():
         config.add_section("Application")
 
-    config.set('Application','filename', currBible().fileName)
+    config.set('Application','filename', currBible().filename)
 
     config.set('Application','left', f'{win.winfo_x()}')
     config.set('Application','top',  f'{win.winfo_y()}')
@@ -324,8 +328,8 @@ def readConfig():
     config.read("config.ini", "utf8")
 
     try:
-        fileName = config.get('Application','filename')
-        shelf.setCurrentByName(fileName)
+        filename = config.get('Application','filename')
+        shelf.setCurrentByName(filename)
         combobox.current(shelf.current)
 
         left = config.get('Application', 'left')
@@ -343,7 +347,7 @@ def readConfig():
 readConfig()
 makeBookList()
 loadChapter()
-status['text'] = " " + currBible().fileName + " | " + currBible().info
+status['text'] = " " + currBible().filename + " | " + currBible().info
 
 win.protocol("WM_DELETE_WINDOW", on_exit)
 win.deiconify()
