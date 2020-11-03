@@ -56,7 +56,7 @@ def compare(event=None):
     loadCompare()
 
 def strong(event=None):
-    loadCompare()
+    loadStrong()
 
 def copy(event=None):
     memo.event_generate("<<Copy>>")
@@ -302,6 +302,23 @@ def loadCompare():
             s = applyTags(value[0])
             text += f"{info}\n{s}\n\n"
     memoLoad(text)
+
+def loadStrong():
+    try:
+        num = memo.selection_get()
+        currVerse.number = int(num)
+    except:
+        messagebox.showwarning("Tooltip","Select the strong number!")
+        return
+
+    text = currBible().verseToStr(currVerse, True) + '\n\n'
+    for bible in shelf.bibles:
+        value = bible.getRange(currVerse)
+        if value:
+            info = bible.name
+            s = applyTags(value[0])
+            text += f"{info}\n{s}\n\n"
+#   memoLoad(text)
 
 # Config
 
