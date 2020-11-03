@@ -22,8 +22,8 @@ class Verse:
 class Module:
     database     = None
     cursor       = None
-    filePath     = ""
-    fileName     = ""
+    filepath     = ""
+    filename     = ""
 
     name         = ""
     abbr         = ""
@@ -43,8 +43,8 @@ class Module:
     embtitles    = False
 
     def __init__(self, path: str):
-        self.filePath = path
-        self.fileName = os.path.basename(path)
+        self.filepath = path
+        self.filename = os.path.basename(path)
         self.openDatabase()
 
     def dict_factory(self, cursor, row) -> dict:
@@ -60,7 +60,7 @@ class Module:
 
     def openDatabase(self):
         try:
-            self.database = sqlite3.connect(self.filePath)
+            self.database = sqlite3.connect(self.filepath)
             self.database.row_factory = self.dict_factory
             self.cursor = self.database.cursor()
         except:
@@ -229,7 +229,7 @@ class Shelf():
     def __init__(self):
         self.bibles = []
         self._load()
-#       bibles.sort(by: {$0.name < $1.name} )
+        self.bibles = sorted(self.bibles, key=lambda bible: bible.name)
 
     def _load(self):
         files = glob.glob("bibles/*.unbound")
@@ -247,10 +247,10 @@ class Shelf():
         if not self.bibles[index].goodLink(currVerse):
             currVerse = bibles[index].firstVerse()
 
-    def setCurrentByName(self, fileName: str):
+    def setCurrentByName(self, filename: str):
         index = 0
         for i in range(len(self.bibles)):
-            if self.bibles[i].fileName == fileName:
+            if self.bibles[i].filename == filename:
                 index = i
         self.setCurrent(index)
 
