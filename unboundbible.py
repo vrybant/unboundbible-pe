@@ -20,7 +20,7 @@ from bible import *
 
 win = Tk()
 win.withdraw()
-win.title("Unbound Bible PE")
+win.title("Unbound Bible")
 if os.name == 'nt': win.iconbitmap('icons/unboundbible.ico')
 
 def popup(event):
@@ -44,7 +44,7 @@ def theme(event=None):
 #######################################################################
 
 def about(event=None):
-    messagebox.showinfo("About","Unbound Bible Python Edition \n\n Open Source Application")
+    messagebox.showinfo("About","Unbound Bible Tkinter Edition \n\n Open Source Application")
 
 def help_box(event=None):
     pass
