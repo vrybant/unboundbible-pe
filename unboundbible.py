@@ -178,7 +178,7 @@ def comboboxSelect(event=None):
         index = combobox.current()
         shelf.setCurrent(index)
         makeBookList()
-        goToVerse(currVerse)
+        gotoVerse(currVerse)
         status['text'] = " " + currBible().filename + " | " + currBible().info
 
 combolist = []
@@ -207,6 +207,7 @@ def bookBoxSelect(event=None):
                 currVerse.reset()
                 currVerse.book = book
                 loadChapter()
+                makeChapterList()
 
 bookBox = Listbox(win, height=4)
 bookBox.bind("<<ListboxSelect>>", bookBoxSelect)
@@ -253,9 +254,10 @@ memo.bind('<KeyPress-F1>', help_box)
 
 memo.tag_configure("active_line", background="ivory2")
 
-def goToVerse(verse: Verse):
+def gotoVerse(verse: Verse):
     if not currBible().goodLink(verse): return
     currVerse = verse
+    makeChapterList()
     loadChapter()
 
 def applyTags(s: str) -> str:
@@ -272,7 +274,6 @@ def loadChapter():
         s = applyTags(strings[i])
         text += f" {i+1} {s}\n"
     memoLoad(text)
-    makeChapterList()
 
 def loadSearch(target: str):
     if len(target) < 3:  return
@@ -363,6 +364,7 @@ def readConfig():
 
 readConfig()
 makeBookList()
+makeChapterList()
 loadChapter()
 status['text'] = " " + currBible().filename + " | " + currBible().info
 
