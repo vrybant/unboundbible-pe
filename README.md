@@ -1,2 +1,2 @@
-# Unbound Bible Tkinter Edition
-Unbound Bible Tkinter Edition written in Python
+# Unbound Bible Python Edition
+Unbound Bible written in Python
