@@ -5,6 +5,7 @@
 
 import os
 import glob
+import locale
 import sqlite3
 
 class Verse:
@@ -40,6 +41,7 @@ class Module:
     embedded     = False
     footnotes    = False
     interlinear  = False
+    default      = False
     embtitles    = False
 
     def __init__(self, path: str):
@@ -82,6 +84,7 @@ class Module:
         self.copyright = row.get("Copyright",    "")
         self.language  = row.get("Language",     "")
         self.strong    = row.get("Strong",       "")
+        self.default   = row.get("Default",      "")
 
 #       self.rightToLeft = getRightToLeft(self.language)
         self.connected = True
@@ -257,6 +260,17 @@ class Shelf():
     def isEmpty(self) -> bool:
         return False if self.bibles else True
 
+    def langCode(self) -> str:
+        return locale.getdefaultlocale()[0][0:2]
+
+    def getDefaultBible(self) -> str: 
+        result = ""
+        for bible in self.bibles:
+            if bible.default:
+                if bible.language == self.langCode() : return bible.name 
+                if bible.language == "en": result = bible.name 
+        return result
+    
 def currBible():
     return shelf.bibles[shelf.current]
 
