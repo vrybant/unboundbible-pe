@@ -10,7 +10,6 @@ import re
 import configparser
 
 from tkinter import *
-from tkinter import ttk
 from tkinter.ttk import *
 from tkinter import filedialog
 from tkinter import messagebox
@@ -43,26 +42,26 @@ def theme(event=None):
 
 #######################################################################
 
-def about(event=None):
+def about():
     messagebox.showinfo("About","Unbound Bible Tkinter Edition \n\n Open Source Application")
 
-def help_box(event=None):
+def help_box():
     pass
 
-def find(event=None):
+def find():
     entry.focus_set()
 
-def compare(event=None):
+def compare():
     loadCompare()
 
-def strong(event=None):
+def strong():
     loadStrong()
 
-def copy(event=None):
+def copy():
     memo.event_generate("<<Copy>>")
 #   s = win.clipboard_get()
 
-def select_all(event=None):
+def select_all():
         memo.focus_set()
         memo.tag_add('sel', '1.0', 'end')
         return
@@ -367,6 +366,9 @@ makeBookList()
 makeChapterList()
 loadChapter()
 status['text'] = " " + currBible().filename + " | " + currBible().info
+
+out = shelf.getDefaultBible()
+print(out) 
 
 win.protocol("WM_DELETE_WINDOW", on_exit)
 win.deiconify()
