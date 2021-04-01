@@ -5,8 +5,9 @@
 
 import os
 import glob
-import locale
 import sqlite3
+
+from lib import *
 
 class Verse:
     book    = 1
@@ -260,14 +261,11 @@ class Shelf():
     def isEmpty(self) -> bool:
         return False if self.bibles else True
 
-    def langCode(self) -> str:
-        return locale.getdefaultlocale()[0][0:2]
-
     def getDefaultBible(self) -> str: 
         result = ""
         for bible in self.bibles:
             if bible.default:
-                if bible.language == self.langCode() : return bible.name 
+                if bible.language == languageCode() : return bible.name 
                 if bible.language == "en": result = bible.name 
         return result
     
