@@ -228,10 +228,10 @@ class Bible(Module):
         return n >= 40 and n < 77
 
 class Shelf():
-    current = 0
+    bibles = []
+    currBible = None
 
     def __init__(self):
-        self.bibles = []
         self._load()
         self.bibles = sorted(self.bibles, key=lambda bible: bible.name)
 
@@ -242,22 +242,18 @@ class Shelf():
             item = Bible(file)
             self.bibles.append(item)
 
-    def setCurrent(self, index: int):
-        if index >= len(self.bibles): return
-        self.current = index
-        self.bibles[index].loadDatabase()
+    def setCurrent(self, name: str):
+        for bible in self.bibles:
+            if bible.name == name:
+                self.currBible = bible
+                break
+        
+        self.currBible.loadDatabase()
 
         global currVerse
-        if not self.bibles[index].goodLink(currVerse):
-            currVerse = bibles[index].firstVerse()
-
-    def setCurrentByName(self, filename: str):
-        index = 0
-        for i in range(len(self.bibles)):
-            if self.bibles[i].filename == filename:
-                index = i
-        self.setCurrent(index)
-
+        if not self.currBible.goodLink(currVerse):
+            currVerse = self.currBible.firstVerse()
+            
     def isEmpty(self) -> bool:
         return False if self.bibles else True
 
@@ -270,7 +266,7 @@ class Shelf():
         return result
     
 def currBible():
-    return shelf.bibles[shelf.current]
+    return shelf.currBible
 
 currVerse = Verse()
 shelf = Shelf()
