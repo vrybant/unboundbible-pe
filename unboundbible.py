@@ -172,17 +172,27 @@ scroll.pack(side=RIGHT, fill=Y)
 
 # Combobox
 
+def loadCombobox() -> [str]:
+    combolist = []
+    for bible in shelf.bibles:
+        combolist.append(" " + bible.name)
+    return combolist
+
 def comboboxSelect(event=None):
     if event: # this works only with bind because `command=` doesn't send event
-        index = combobox.current()
-        shelf.setCurrent(index)
+        value = combobox.get().strip()
+        shelf.setCurrent(value)
         makeBookList()
         gotoVerse(currVerse)
         status['text'] = " " + currBible().filename + " | " + currBible().info
-
-combolist = []
-for bible in shelf.bibles:
-    combolist.append(" " + bible.name)
+        
+def comboboxSetCurrent(value: str):
+    index = 0
+    for item in combolist:
+        if item.strip() == value: combobox.current(index)
+        index += 1
+        
+combolist = loadCombobox()
 combobox = Combobox(win, textvariable = StringVar(), values=combolist)
 combobox.bind("<<ComboboxSelected>>", comboboxSelect)
 combobox.pack(side=TOP, fill=X)
@@ -329,7 +339,7 @@ def saveConfig():
     if "Application" not in config.sections():
         config.add_section("Application")
 
-    config.set('Application','filename', currBible().filename)
+    config.set('Application','CurrentBible', currBible().name)
 
     config.set('Application','left', f'{win.winfo_x()}')
     config.set('Application','top',  f'{win.winfo_y()}')
@@ -345,18 +355,20 @@ def readConfig():
     config.read("config.ini", "utf8")
 
     try:
-        filename = config.get('Application','filename')
-        shelf.setCurrentByName(filename)
-        combobox.current(shelf.current)
-
+        currentBible = config.get('Application', 'CurrentBible')
+    except:
+        currentBible = shelf.getDefaultBible()
+        
+    shelf.setCurrent(currentBible)
+    comboboxSetCurrent(currBible().name)
+        
+    try:
         left = config.get('Application', 'left')
         top  = config.get('Application', 'top')
         width  = config.get('Application', 'width')
         height = config.get('Application', 'height')
-
         win.geometry(f'{width}x{height}+{left}+{top}')
     except:
-        combobox.current(0)
         win.geometry('640x480')
 
 # Init
@@ -366,9 +378,6 @@ makeBookList()
 makeChapterList()
 loadChapter()
 status['text'] = " " + currBible().filename + " | " + currBible().info
-
-out = shelf.getDefaultBible()
-print(out) 
 
 win.protocol("WM_DELETE_WINDOW", on_exit)
 win.deiconify()
