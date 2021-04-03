@@ -43,7 +43,7 @@ def theme(event=None):
 #######################################################################
 
 def about():
-    messagebox.showinfo("About","Unbound Bible Tkinter Edition \n\n Open Source Application")
+    messagebox.showinfo("About","Unbound Bible Python Edition \n\n Open Source Application")
 
 def help_box():
     pass
