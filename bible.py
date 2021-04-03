@@ -243,6 +243,8 @@ class Shelf():
             self.bibles.append(item)
 
     def setCurrent(self, name: str):
+        self.currBible = self.bibles[0]
+        
         for bible in self.bibles:
             if bible.name == name:
                 self.currBible = bible
