@@ -236,7 +236,7 @@ class Shelf():
         self.bibles = sorted(self.bibles, key=lambda bible: bible.name)
 
     def _load(self):
-        files = glob.glob("bibles/*.unbound")
+        files = glob.glob("modules/*.unbound")
 
         for file in files:
             item = Bible(file)
