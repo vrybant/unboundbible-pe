@@ -185,13 +185,13 @@ def comboboxSelect(event=None):
         makeBookList()
         gotoVerse(currVerse)
         status['text'] = " " + currBible().filename + " | " + currBible().info
-        
+
 def comboboxSetCurrent(value: str):
     index = 0
     for item in combolist:
         if item.strip() == value: combobox.current(index)
         index += 1
-        
+
 combolist = loadCombobox()
 combobox = Combobox(win, textvariable = StringVar(), values=combolist)
 combobox.bind("<<ComboboxSelected>>", comboboxSelect)
@@ -358,10 +358,10 @@ def readConfig():
         currentBible = config.get('Application', 'CurrentBible')
     except:
         currentBible = shelf.getDefaultBible()
-        
+
     shelf.setCurrent(currentBible)
     comboboxSetCurrent(currBible().name)
-        
+
     try:
         left = config.get('Application', 'left')
         top  = config.get('Application', 'top')
