@@ -227,25 +227,25 @@ class Bible(Module):
     def isNewTestament(self, n: int) -> bool:
         return n >= 40 and n < 77
 
-class Shelf():
-    bibles = []
+class Bibles():
+    items = []
     currBible = None
 
     def __init__(self):
         self._load()
-        self.bibles = sorted(self.bibles, key=lambda bible: bible.name)
+        self.items = sorted(self.items, key=lambda bible: bible.name)
 
     def _load(self):
         files = glob.glob("modules/*.unbound")
 
         for file in files:
             item = Bible(file)
-            self.bibles.append(item)
+            self.items.append(item)
 
     def setCurrent(self, name: str):
-        self.currBible = self.bibles[0]
+        self.currBible = self.items[0]
         
-        for bible in self.bibles:
+        for bible in self.items:
             if bible.name == name:
                 self.currBible = bible
                 break
@@ -257,18 +257,18 @@ class Shelf():
             currVerse = self.currBible.firstVerse()
             
     def isEmpty(self) -> bool:
-        return False if self.bibles else True
+        return False if self.items else True
 
     def getDefaultBible(self) -> str: 
         result = ""
-        for bible in self.bibles:
+        for bible in self.items:
             if bible.default:
                 if bible.language == languageCode() : return bible.name 
                 if bible.language == "en": result = bible.name 
         return result
     
 def currBible():
-    return shelf.currBible
+    return bibles.currBible
 
 currVerse = Verse()
-shelf = Shelf()
+bibles = Bibles()

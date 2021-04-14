@@ -174,14 +174,14 @@ scroll.pack(side=RIGHT, fill=Y)
 
 def loadCombobox() -> [str]:
     combolist = []
-    for bible in shelf.bibles:
+    for bible in bibles.items:
         combolist.append(" " + bible.name)
     return combolist
 
 def comboboxSelect(event=None):
     if event: # this works only with bind because `command=` doesn't send event
         value = combobox.get().strip()
-        shelf.setCurrent(value)
+        bibles.setCurrent(value)
         makeBookList()
         gotoVerse(currVerse)
         status['text'] = " " + currBible().filename + " | " + currBible().info
@@ -305,7 +305,7 @@ def loadCompare():
         return
 
     text = currBible().verseToStr(currVerse, True) + '\n\n'
-    for bible in shelf.bibles:
+    for bible in bibles.items:
         value = bible.getRange(currVerse)
         if value:
             info = bible.name
@@ -322,7 +322,7 @@ def loadStrong():
         return
 
     text = currBible().verseToStr(currVerse, True) + '\n\n'
-    for bible in shelf.bibles:
+    for bible in bibles.items:
         value = bible.getRange(currVerse)
         if value:
             info = bible.name
@@ -357,9 +357,9 @@ def readConfig():
     try:
         currentBible = config.get('Application', 'CurrentBible')
     except:
-        currentBible = shelf.getDefaultBible()
+        currentBible = bibles.getDefaultBible()
 
-    shelf.setCurrent(currentBible)
+    bibles.setCurrent(currentBible)
     comboboxSetCurrent(currBible().name)
 
     try:
