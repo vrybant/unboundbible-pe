@@ -174,7 +174,7 @@ scroll.pack(side=RIGHT, fill=Y)
 
 def loadCombobox() -> [str]:
     combolist = []
-    for bible in bibles.items:
+    for bible in bibles:
         combolist.append(" " + bible.name)
     return combolist
 
@@ -305,7 +305,7 @@ def loadCompare():
         return
 
     text = currBible().verseToStr(currVerse, True) + '\n\n'
-    for bible in bibles.items:
+    for bible in bibles:
         value = bible.getRange(currVerse)
         if value:
             info = bible.name
@@ -322,7 +322,7 @@ def loadStrong():
         return
 
     text = currBible().verseToStr(currVerse, True) + '\n\n'
-    for bible in bibles.items:
+    for bible in bibles:
         value = bible.getRange(currVerse)
         if value:
             info = bible.name

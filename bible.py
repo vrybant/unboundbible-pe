@@ -227,46 +227,45 @@ class Bible(Module):
     def isNewTestament(self, n: int) -> bool:
         return n >= 40 and n < 77
 
-class Bibles():
-    items = []
+class Bibles(list):
     currBible = None
 
     def __init__(self):
         self._load()
-        self.items = sorted(self.items, key=lambda bible: bible.name)
+        self.sort(key=lambda item: item.name)
 
     def _load(self):
         files = glob.glob("modules/*.unbound")
 
         for file in files:
             item = Bible(file)
-            self.items.append(item)
+            self.append(item)
 
     def setCurrent(self, name: str):
-        self.currBible = self.items[0]
-        
-        for bible in self.items:
+        self.currBible = self[0]
+
+        for bible in self:
             if bible.name == name:
                 self.currBible = bible
                 break
-        
+
         self.currBible.loadDatabase()
 
         global currVerse
         if not self.currBible.goodLink(currVerse):
             currVerse = self.currBible.firstVerse()
-            
+
     def isEmpty(self) -> bool:
         return False if self.items else True
 
-    def getDefaultBible(self) -> str: 
+    def getDefaultBible(self) -> str:
         result = ""
-        for bible in self.items:
+        for bible in self:
             if bible.default:
-                if bible.language == languageCode() : return bible.name 
-                if bible.language == "en": result = bible.name 
+                if bible.language == languageCode() : return bible.name
+                if bible.language == "en": result = bible.name
         return result
-    
+
 def currBible():
     return bibles.currBible
 
