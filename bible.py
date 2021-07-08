@@ -48,6 +48,13 @@ class Module:
     def __init__(self, path: str):
         self.filepath = path
         self.filename = os.path.basename(path)
+        try:
+            self.database = sqlite3.connect(self.filepath)
+            self.database.row_factory = self.dict_factory
+            self.cursor = self.database.cursor()
+        except:
+            print("connect database exception")
+            return
         self.openDatabase()
 
     def dict_factory(self, cursor, row) -> dict:
@@ -62,14 +69,6 @@ class Module:
         return cursor.fetchone() != None
 
     def openDatabase(self):
-        try:
-            self.database = sqlite3.connect(self.filepath)
-            self.database.row_factory = self.dict_factory
-            self.cursor = self.database.cursor()
-        except:
-            print("connect database exception")
-            return
-
         query = "select * from Details"
         try:
             self.cursor.execute(query)
