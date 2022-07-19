@@ -165,7 +165,7 @@ def memoLoad(text: str):
 
 memo = Text(win, wrap=WORD, undo=True)
 memo.bind('<Button-1>', memo_on_click)
-memo.grid(row=1, column=2, rowspan=2, padx=2, sticky=E+W+S+N)
+memo.grid(row=1, column=2, rowspan=2, padx=2, sticky=NSEW)
 
 scroll=Scrollbar(memo)
 memo.configure(yscrollcommand=scroll.set)

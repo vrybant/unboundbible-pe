@@ -151,7 +151,7 @@ class Bible(Module):
             result += '-' + str(verse.number + verse.count - 1)
         return result
 
-    def getTitles(self) -> [str]:
+    def getTitles(self) -> list[str]:
         result = []
         for book in self._books:
             result.append(book.title)
@@ -167,7 +167,7 @@ class Bible(Module):
             print("chaptersCount exception")
             return 0
 
-    def getChapter(self, verse: Verse) -> [str]:
+    def getChapter(self, verse: Verse) -> list[str]:
         query = f"SELECT * FROM Bible WHERE Book={verse.book} AND Chapter={verse.chapter}"
         try:
             self.cursor.execute(query)
@@ -183,7 +183,7 @@ class Bible(Module):
             print("getChapter exception")
             return []
 
-    def getRange(self, verse: Verse) -> [str]:
+    def getRange(self, verse: Verse) -> list[str]:
         query = f"SELECT * FROM Bible WHERE Book={verse.book} AND Chapter={verse.chapter} " + \
                 f"AND Verse>={verse.number} AND Verse<{verse.number + verse.count}"
         try:
@@ -200,7 +200,7 @@ class Bible(Module):
             print("getRange exception")
             return []
 
-    def getSearch(self, target: str) -> [str]:
+    def getSearch(self, target: str) -> list[str]:
         query = f"SELECT * FROM Bible WHERE Scripture LIKE '%{target}%'"
         try:
             self.cursor.execute(query)
