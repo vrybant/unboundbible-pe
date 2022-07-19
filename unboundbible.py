@@ -72,6 +72,8 @@ def on_exit(event=None):
 
 ######################################################################
 
+# Menu
+
 copyicon = PhotoImage(file='icons/copy.gif')
 compricon = PhotoImage(file='icons/compare.gif')
 
@@ -115,6 +117,12 @@ menubar.add_cascade(label="About",  menu=aboutmenu)
 
 win.config(menu=menubar) # Returning defined setting for widget
 
+# Frame configure
+
+win.rowconfigure(2, minsize=300, weight=1)
+win.rowconfigure(3, minsize=8)
+win.columnconfigure(2, weight=1)
+
 # Toolbar
 
 toolbar = Frame(win,  height=25)
@@ -125,12 +133,7 @@ for i, icon in enumerate(icons):
     button = Button(toolbar, image=image, command=eval(icon))
     button.image = image
     button.grid(row=0,column=i)
-toolbar.grid(row=0,column=0, sticky=NW)
-
-# Separator
-
-separator = Label(toolbar, text='')
-#separator.pack(side=RIGHT)
+toolbar.grid(row=0,column=0, columnspan=3, sticky=W)
 
 # Entry
 
@@ -139,14 +142,14 @@ def return_entry(event=None):
     loadSearch(text)
 
 entryVar = StringVar()
-entry = Entry(toolbar, width=25, textvariable=entryVar)
+entry = Entry(win, width=25, textvariable=entryVar)
 entry.bind('<Return>', return_entry)
-entry.grid(row=0, column=len(icons))
+entry.grid(row=0, column=2, padx=2, sticky=E)
 
 # Status Bar
 
 status = Label(win, text="")
-status.grid(row=3, column=0, columnspan=3)
+status.grid(row=3, column=0, columnspan=3, sticky=W)
 
 # Text & ScrollBar
 
@@ -162,7 +165,7 @@ def memoLoad(text: str):
 
 memo = Text(win, wrap=WORD, undo=True)
 memo.bind('<Button-1>', memo_on_click)
-memo.grid(row=1, column=2, rowspan=2)
+memo.grid(row=1, column=2, rowspan=2, padx=2, sticky=E+W+S+N)
 
 scroll=Scrollbar(memo)
 memo.configure(yscrollcommand=scroll.set)
@@ -171,7 +174,7 @@ scroll.config(command=memo.yview)
 
 # Combobox
 
-def loadCombobox() -> [str]:
+def loadCombobox() -> list[str]:
     combolist = []
     for bible in bibles:
         combolist.append(" " + bible.name)
@@ -194,7 +197,7 @@ def comboboxSetCurrent(value: str):
 combolist = loadCombobox()
 combobox = Combobox(win, textvariable = StringVar(), values=combolist)
 combobox.bind("<<ComboboxSelected>>", comboboxSelect)
-combobox.grid(row=1, column=0, columnspan=2)
+combobox.grid(row=1, column=0, columnspan=2, padx=2, sticky=E+W)
 
 # BookBox
 
@@ -219,7 +222,7 @@ def bookBoxSelect(event=None):
 
 bookBox = Listbox(win, height=4)
 bookBox.bind("<<ListboxSelect>>", bookBoxSelect)
-bookBox.grid(row=2, column=0)
+bookBox.grid(row=2, column=0, padx=2, pady=2, sticky=E+W+S+N)
 
 # ChapterBox
 
@@ -242,7 +245,7 @@ def chapterBoxSelect(event=None):
 
 chapterBox = Listbox(win, height=4)
 chapterBox.bind("<<ListboxSelect>>", chapterBoxSelect)
-chapterBox.grid(row=2, column=1)
+chapterBox.grid(row=2, column=1, padx=2, pady=2, sticky=E+W+S+N)
 
 # Popup Menu
 
