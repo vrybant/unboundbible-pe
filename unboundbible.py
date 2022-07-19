@@ -115,21 +115,22 @@ menubar.add_cascade(label="About",  menu=aboutmenu)
 
 win.config(menu=menubar) # Returning defined setting for widget
 
-# Shortcut Icon Toolbar
+# Toolbar
 
-shortcutbar = Frame(win,  height=25)
+toolbar = Frame(win,  height=25)
 
 icons = ['copy', 'strong', 'compare', 'find', 'about']
 for i, icon in enumerate(icons):
-    tbicon = PhotoImage(file=f'icons/{icon}.gif')
-    toolbar = Button(shortcutbar, image=tbicon, command=eval(icon))
-    toolbar.image = tbicon
-    toolbar.pack(side=LEFT)
+    image = PhotoImage(file=f'icons/{icon}.gif')
+    button = Button(toolbar, image=image, command=eval(icon))
+    button.image = image
+    button.grid(row=0,column=i)
+toolbar.grid(row=0,column=0, sticky=NW)
 
 # Separator
 
-separator = Label(shortcutbar, text='')
-separator.pack(side=RIGHT)
+separator = Label(toolbar, text='')
+#separator.pack(side=RIGHT)
 
 # Entry
 
@@ -138,16 +139,14 @@ def return_entry(event=None):
     loadSearch(text)
 
 entryVar = StringVar()
-entry = Entry(shortcutbar, width=25, textvariable=entryVar)
+entry = Entry(toolbar, width=25, textvariable=entryVar)
 entry.bind('<Return>', return_entry)
-entry.pack(side=RIGHT)
-
-shortcutbar.pack(expand=NO, fill=X)
+entry.grid(row=0, column=len(icons))
 
 # Status Bar
 
 status = Label(win, text="")
-status.pack(expand=NO, fill=X, side=BOTTOM, anchor='se')
+status.grid(row=3, column=0, columnspan=3)
 
 # Text & ScrollBar
 
@@ -163,12 +162,12 @@ def memoLoad(text: str):
 
 memo = Text(win, wrap=WORD, undo=True)
 memo.bind('<Button-1>', memo_on_click)
-memo.pack(side=RIGHT, expand=YES, fill=BOTH)
+memo.grid(row=1, column=2, rowspan=2)
 
 scroll=Scrollbar(memo)
 memo.configure(yscrollcommand=scroll.set)
 scroll.config(command=memo.yview)
-scroll.pack(side=RIGHT, fill=Y)
+#scroll.grid(row=1, column=4)
 
 # Combobox
 
@@ -195,7 +194,7 @@ def comboboxSetCurrent(value: str):
 combolist = loadCombobox()
 combobox = Combobox(win, textvariable = StringVar(), values=combolist)
 combobox.bind("<<ComboboxSelected>>", comboboxSelect)
-combobox.pack(side=TOP, fill=X)
+combobox.grid(row=1, column=0, columnspan=2)
 
 # BookBox
 
@@ -220,7 +219,7 @@ def bookBoxSelect(event=None):
 
 bookBox = Listbox(win, height=4)
 bookBox.bind("<<ListboxSelect>>", bookBoxSelect)
-bookBox.pack(side=LEFT, fill=BOTH)
+bookBox.grid(row=2, column=0)
 
 # ChapterBox
 
@@ -243,7 +242,7 @@ def chapterBoxSelect(event=None):
 
 chapterBox = Listbox(win, height=4)
 chapterBox.bind("<<ListboxSelect>>", chapterBoxSelect)
-chapterBox.pack(side=LEFT, fill=BOTH)
+chapterBox.grid(row=2, column=1)
 
 # Popup Menu
 
