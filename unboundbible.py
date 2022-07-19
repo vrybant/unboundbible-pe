@@ -157,7 +157,7 @@ def memoLoad(text: str):
 memo = Text(win, wrap=WORD, undo=True)
 memo.bind('<Button-1>', memo_on_click)
 
-scroll=Scrollbar(memo)
+scroll=Scrollbar(win)
 memo.configure(yscrollcommand=scroll.set)
 scroll.config(command=memo.yview)
 
@@ -258,12 +258,12 @@ win.rowconfigure(3, minsize=8)
 win.columnconfigure(2, weight=1)
 
 toolbar.grid(row=0,column=0, columnspan=3, sticky=W)
-entry.grid(row=0, column=2, padx=2, sticky=E)
+entry.grid(row=0, column=2, columnspan=2, padx=2, sticky=E)
 combobox.grid(row=1, column=0, columnspan=2, padx=2, sticky=E+W)
 bookBox.grid(row=2, column=0, padx=2, pady=2, sticky=E+W+S+N)
 chapterBox.grid(row=2, column=1, padx=2, pady=2, sticky=E+W+S+N)
 memo.grid(row=1, column=2, rowspan=2, padx=2, sticky=NSEW)
-#scroll.grid(row=1, column=4)
+scroll.grid(row=1, column=3, rowspan=2, sticky=NS)
 status.grid(row=3, column=0, columnspan=3, sticky=W)
 
 def gotoVerse(verse: Verse):
