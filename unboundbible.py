@@ -6,6 +6,7 @@ Open Source Application
 """
 
 import os
+import sys
 import re
 import configparser
 
@@ -375,6 +376,8 @@ def readConfig():
         win.geometry('640x480')
 
 # Init
+
+assert sys.version_info >= (3, 9), "Use Python 3.9 or newer"
 
 readConfig()
 makeBookList()
