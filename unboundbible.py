@@ -122,7 +122,7 @@ win.config(menu=menubar) # Returning defined setting for widget
 
 toolbar = Frame(win,  height=25)
 
-icons = ['copy', 'strong', 'compare', 'find', 'about']
+icons = ['compare', 'copy', 'about']
 for i, icon in enumerate(icons):
     image = PhotoImage(file=f'icons/{icon}.gif')
     button = Button(toolbar, image=image, command=eval(icon))
@@ -147,7 +147,6 @@ status = Label(win, text="")
 
 def memo_on_click(event=None):
     pass
-#   print(memo.index(INSERT))
 
 def memoLoad(text: str):
     memo.config(state=NORMAL)
@@ -156,7 +155,7 @@ def memoLoad(text: str):
 #   memo.config(state=DISABLED)
 
 memo = Text(win, wrap=WORD, undo=True)
-memo.bind('<Button-1>', memo_on_click)
+memo.bind('<ButtonRelease-1>', memo_on_click)
 
 scroll=Scrollbar(win)
 memo.configure(yscrollcommand=scroll.set)
@@ -301,12 +300,10 @@ def loadSearch(target: str):
     status['text'] = f" {len(strings)} verses found."
 
 def loadCompare():
-    try:
-        num = memo.selection_get()
-        currVerse.number = int(num)
-    except:
-        messagebox.showwarning("Tooltip","Select the verse number!")
-        return
+    num = memo.index(INSERT).split('.')[0] 
+    currVerse.number = int(num)
+    if not currBible().goodLink(currVerse):
+        currVerse.number = 1
 
     text = currBible().verseToStr(currVerse, True) + '\n\n'
     for bible in bibles:
