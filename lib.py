@@ -3,7 +3,7 @@
 #  Unbound Bible Python Edition
 #
 
-import os
+import __future__
 import locale
 
 def languageCode() -> str:

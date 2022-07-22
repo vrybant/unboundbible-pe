@@ -3,6 +3,7 @@
 #  Unbound Bible Python Edition
 #
 
+import __future__
 import os
 import glob
 import sqlite3

@@ -5,6 +5,7 @@ Open Source Application
 
 """
 
+import __future__
 import os
 import sys
 import re
@@ -374,7 +375,7 @@ def readConfig():
 
 # Init
 
-assert sys.version_info >= (3, 9), "Use Python 3.9 or newer"
+assert sys.version_info >= (3, 7), "Use Python 3.7 or newer"
 
 readConfig()
 makeBookList()
