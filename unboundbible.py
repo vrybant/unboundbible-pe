@@ -6,7 +6,6 @@ Open Source Application
 """
 
 import os
-import __future__
 import sys
 import re
 import configparser
