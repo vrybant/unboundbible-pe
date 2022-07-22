@@ -5,11 +5,13 @@ Open Source Application
 
 """
 
-import __future__
 import os
+import __future__
 import sys
 import re
 import configparser
+
+assert sys.version_info >= (3, 9), "Use Python 3.9 or newer"
 
 from tkinter import *
 from tkinter.ttk import *
@@ -374,8 +376,6 @@ def readConfig():
         win.geometry('640x480')
 
 # Init
-
-assert sys.version_info >= (3, 7), "Use Python 3.7 or newer"
 
 readConfig()
 makeBookList()
