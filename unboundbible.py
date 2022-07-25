@@ -24,6 +24,7 @@ win = Tk()
 win.withdraw()
 win.title("Unbound Bible")
 if os.name == 'nt': win.iconbitmap('icons/unboundbible.ico')
+fontSize = 11
 
 def popup(event):
     pmmenu.tk_popup(event.x_root, event.y_root, 0)
@@ -156,7 +157,7 @@ def memoLoad(text: str):
     memo.insert(1.0, text)
 #   memo.config(state=DISABLED)
 
-memo = Text(win, wrap=WORD, undo=True)
+memo = Text(win, wrap=WORD, undo=True, font=("TkTextFont", fontSize+1))
 memo.bind('<ButtonRelease-1>', memo_on_click)
 
 scroll=Scrollbar(win)
@@ -186,7 +187,7 @@ def comboboxSetCurrent(value: str):
         index += 1
 
 combolist = loadCombobox()
-combobox = Combobox(win, textvariable = StringVar(), values=combolist)
+combobox = Combobox(win, textvariable = StringVar(), values=combolist, font=("TkTextFont", fontSize-1))
 combobox.bind("<<ComboboxSelected>>", comboboxSelect)
 
 # BookBox
@@ -210,7 +211,7 @@ def bookBoxSelect(event=None):
                 loadChapter()
                 makeChapterList()
 
-bookBox = Listbox(win, height=4)
+bookBox = Listbox(win, height=4,  activestyle="none", exportselection=False, font=("TkTextFont", fontSize))
 bookBox.bind("<<ListboxSelect>>", bookBoxSelect)
 
 # ChapterBox
@@ -232,7 +233,7 @@ def chapterBoxSelect(event=None):
             currVerse.count = 1;
             loadChapter()
 
-chapterBox = Listbox(win, height=4)
+chapterBox = Listbox(win, height=4, activestyle="none", exportselection=False, font=("TkTextFont", fontSize))
 chapterBox.bind("<<ListboxSelect>>", chapterBoxSelect)
 
 # Popup Menu
