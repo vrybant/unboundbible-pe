@@ -256,7 +256,7 @@ class Bibles(list):
         self.sort(key=lambda item: item.name)
 
     def _load(self):
-        files = glob.glob("modules/*.unbound")
+        files = glob.glob("data/*.unbound")
 
         for file in files:
             item = Bible(file)
